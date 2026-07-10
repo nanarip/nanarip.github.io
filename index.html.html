@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>nana.rip — curadoria alternativa</title>
+<meta name="description" content="curadoria alternativa: gótico, cyberpunk, pastel goth & yami kawaii. periféricos, moda e acessórios pra quem vive fora do padrão.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Space+Grotesk:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --void:#0a0807;
+    --panel:#130e0f;
+    --panel-line:#241819;
+    --blood:#c31432;
+    --blood-dim:#6e0f1c;
+    --blood-bright:#ff2f4f;
+    --ghost:#f2e9e4;
+    --muted:#a3908d;
+    --kawaii:#ff8fc7;
+    --cyber:#7ff0e0;
+  }
+
+  *{ margin:0; padding:0; box-sizing:border-box; }
+
+  html{ scroll-behavior:smooth; }
+
+  body{
+    background:var(--void);
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(195,20,50,0.16), transparent),
+      radial-gradient(ellipse 60% 40% at 100% 100%, rgba(127,240,224,0.05), transparent);
+    color:var(--ghost);
+    font-family:'Space Grotesk', sans-serif;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+
+  ::selection{ background:var(--blood); color:var(--ghost); }
+
+  a{ color:inherit; text-decoration:none; }
+
+  /* ---------- utility ---------- */
+  .mono{ font-family:'Space Mono', monospace; letter-spacing:0.04em; }
+  .display{ font-family:'Cinzel', serif; }
+  .wrap{ max-width:1180px; margin:0 auto; padding:0 28px; }
+
+  /* ---------- header ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(10,8,7,0.86);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--panel-line);
+  }
+  .header-inner{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 28px; max-width:1180px; margin:0 auto;
+  }
+  .wordmark{
+    font-family:'Cinzel', serif; font-size:1.5rem; font-weight:700;
+    color:var(--blood-bright); letter-spacing:0.06em;
+    display:flex; align-items:center; gap:10px;
+  }
+  .wordmark .cross{ font-size:1.1rem; opacity:0.75; }
+  nav{ display:flex; gap:32px; }
+  nav a{
+    font-family:'Space Mono', monospace; font-size:0.78rem;
+    text-transform:uppercase; letter-spacing:0.14em;
+    color:var(--muted); transition:color 0.25s;
+    padding-bottom:4px; border-bottom:1px solid transparent;
+  }
+  nav a:hover, nav a.active{ color:var(--ghost); border-color:var(--blood); }
+
+  /* ---------- ticker ---------- */
+  .ticker{
+    background:var(--blood-dim);
+    color:var(--ghost);
+    overflow:hidden;
+    white-space:nowrap;
+    border-bottom:1px solid var(--panel-line);
+  }
+  .ticker-track{
+    display:inline-block;
+    padding:7px 0;
+    font-family:'Space Mono', monospace;
+    font-size:0.72rem;
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+    animation:scroll-left 32s linear infinite;
+  }
+  .ticker-track span{ margin:0 26px; opacity:0.85; }
+  @keyframes scroll-left{
+    from{ transform:translateX(0); }
+    to{ transform:translateX(-50%); }
+  }
+
+  /* ---------- hero ---------- */
+  .hero{
+    text-align:center;
+    padding:96px 28px 56px;
+    position:relative;
+  }
+  .hero h1{
+    font-family:'Cinzel', serif;
+    font-weight:600;
+    font-size:clamp(2.6rem, 7vw, 4.6rem);
+    color:var(--ghost);
+    letter-spacing:0.03em;
+  }
+  .hero h1 .cross{ color:var(--blood); font-size:0.65em; vertical-align:middle; }
+  .hero .subtitle{
+    margin-top:18px;
+    font-family:'Space Mono', monospace;
+    font-size:0.82rem;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:var(--muted);
+  }
+  .hero .subtitle .amp{ color:var(--kawaii); }
+  .divider{
+    max-width:520px; margin:34px auto;
+    border:none; border-top:1px dashed var(--panel-line);
+    position:relative;
+  }
+  .divider::before, .divider::after{
+    content:'✝'; position:absolute; top:-9px; color:var(--blood-dim); font-size:0.8rem;
+  }
+  .divider::before{ left:0; } .divider::after{ right:0; }
+  .hero .lede{
+    max-width:640px; margin:0 auto;
+    font-size:1rem; line-height:1.75;
+    color:var(--muted);
+    font-style:italic;
+  }
+
+  /* ---------- filters ---------- */
+  .filters{
+    display:flex; flex-wrap:wrap; justify-content:center; gap:10px;
+    padding:40px 28px 10px;
+  }
+  .filter-btn{
+    font-family:'Space Mono', monospace;
+    font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase;
+    padding:9px 18px;
+    border:1px solid var(--panel-line);
+    background:transparent;
+    color:var(--muted);
+    cursor:pointer;
+    transition:all 0.25s;
+  }
+  .filter-btn:hover{ border-color:var(--blood); color:var(--ghost); }
+  .filter-btn.active{ background:var(--blood); border-color:var(--blood); color:var(--ghost); }
+
+  /* ---------- grid ---------- */
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));
+    gap:24px;
+    padding:36px 28px 100px;
+    max-width:1180px; margin:0 auto;
+  }
+
+  .card{
+    position:relative;
+    background:var(--panel);
+    border:1px solid var(--panel-line);
+    overflow:hidden;
+    transition:border-color 0.3s, transform 0.3s;
+  }
+  .card:hover{ border-color:var(--blood-dim); transform:translateY(-3px); }
+
+  .card-img{
+    position:relative;
+    aspect-ratio:4/3;
+    overflow:hidden;
+    background:#1a1213;
+  }
+  .card-img img{
+    width:100%; height:100%; object-fit:cover;
+    filter:saturate(0.9) contrast(1.05);
+    transition:transform 0.5s ease, filter 0.5s ease;
+  }
+  .card:hover .card-img img{ transform:scale(1.06); filter:saturate(1.1) contrast(1.1); }
+
+  .card-img::after{
+    content:'';
+    position:absolute; inset:0;
+    background:linear-gradient(180deg, transparent 55%, rgba(10,8,7,0.85) 100%);
+    pointer-events:none;
+  }
+
+  /* signature element: wax-seal curation stamp, revealed on hover */
+  .seal{
+    position:absolute; top:12px; right:12px;
+    width:52px; height:52px;
+    border-radius:50%;
+    border:1.5px solid var(--blood-bright);
+    display:flex; align-items:center; justify-content:center;
+    background:rgba(10,8,7,0.55);
+    backdrop-filter:blur(2px);
+    opacity:0; transform:scale(0.7) rotate(-12deg);
+    transition:opacity 0.3s ease, transform 0.3s ease;
+    z-index:2;
+  }
+  .card:hover .seal{ opacity:1; transform:scale(1) rotate(0deg); }
+  .seal span{
+    font-family:'Cinzel', serif; font-size:0.52rem;
+    letter-spacing:0.06em; text-align:center; line-height:1.15;
+    color:var(--ghost); text-transform:uppercase;
+  }
+
+  .tag{
+    position:absolute; top:12px; left:12px;
+    font-family:'Space Mono', monospace; font-size:0.62rem;
+    letter-spacing:0.1em; text-transform:uppercase;
+    padding:4px 9px;
+    border:1px solid var(--blood);
+    color:var(--blood-bright);
+    background:rgba(10,8,7,0.6);
+    z-index:2;
+  }
+
+  .card-body{ padding:18px 18px 20px; }
+  .card-body h3{
+    font-family:'Cinzel', serif; font-weight:600;
+    font-size:1.05rem; color:var(--ghost);
+    margin-bottom:8px; line-height:1.3;
+  }
+  .price{
+    font-family:'Space Mono', monospace;
+    color:var(--blood-bright);
+    font-size:0.95rem;
+    margin-bottom:14px;
+  }
+  .cta{
+    display:block; text-align:center;
+    font-family:'Space Mono', monospace; font-size:0.72rem;
+    letter-spacing:0.08em; text-transform:uppercase;
+    padding:11px 0;
+    border:1px solid var(--blood-dim);
+    color:var(--muted);
+    transition:all 0.25s;
+  }
+  .cta:hover{ background:var(--blood); border-color:var(--blood); color:var(--ghost); }
+
+  /* ---------- about ---------- */
+  #sobre{
+    max-width:680px; margin:0 auto; padding:80px 28px 100px;
+    border-top:1px solid var(--panel-line);
+  }
+  #sobre .eyebrow{
+    font-family:'Space Mono', monospace; font-size:0.72rem;
+    letter-spacing:0.16em; text-transform:uppercase;
+    color:var(--blood-bright); margin-bottom:18px;
+  }
+  #sobre p{
+    font-size:1.02rem; line-height:1.85; color:var(--muted);
+    margin-bottom:18px;
+  }
+  #sobre strong{ color:var(--ghost); font-weight:500; }
+  #sobre .kawaii-line{ color:var(--kawaii); font-style:italic; }
+
+  /* ---------- footer ---------- */
+  footer{
+    border-top:1px solid var(--panel-line);
+    padding:36px 28px;
+    text-align:center;
+  }
+  footer p{
+    font-family:'Space Mono', monospace; font-size:0.7rem;
+    letter-spacing:0.08em; color:var(--muted);
+    text-transform:uppercase;
+  }
+  footer .heart{ color:var(--kawaii); }
+
+  @media (max-width:640px){
+    nav{ gap:18px; }
+    .header-inner{ padding:14px 20px; }
+    .hero{ padding:64px 20px 40px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="wordmark"><span class="cross">✝</span> nana.rip <span class="cross">✝</span></div>
+    <nav>
+      <a href="#topo" class="active">início</a>
+      <a href="#sobre">sobre</a>
+    </nav>
+  </div>
+</header>
+
+<div class="ticker">
+  <div class="ticker-track">
+    <span>GÓTICO</span><span>◇</span><span>CYBERPUNK</span><span>◇</span><span>PASTEL GOTH</span><span>◇</span><span>YAMI KAWAII</span><span>◇</span><span>GURO KAWAII</span><span>◇</span>
+    <span>GÓTICO</span><span>◇</span><span>CYBERPUNK</span><span>◇</span><span>PASTEL GOTH</span><span>◇</span><span>YAMI KAWAII</span><span>◇</span><span>GURO KAWAII</span><span>◇</span>
+  </div>
+</div>
+
+<section class="hero" id="topo">
+  <h1><span class="cross">✝</span> nana.rip <span class="cross">✝</span></h1>
+  <p class="subtitle">curadoria alternativa <span class="amp">·</span> gótico <span class="amp">·</span> cyberpunk <span class="amp">·</span> pastel goth & yami kawaii</p>
+  <hr class="divider">
+  <p class="lede">uma vitrine com curadoria — não catálogo aleatório. periféricos, moda e acessórios pra quem vive entre o gótico, o kawaii sombrio e o cyberpunk. cada link leva direto à loja original.</p>
+</section>
+
+<div class="filters" id="filters">
+  <button class="filter-btn active" data-filter="todos">todos</button>
+  <!-- categorias geradas automaticamente via JS a partir da lista de produtos -->
+</div>
+
+<div class="grid" id="grid"></div>
+
+<section id="sobre">
+  <p class="eyebrow">✝ sobre a nana.rip</p>
+  <p>eu sou apaixonado por <strong>yami kawaii</strong> e <strong>guro kawaii</strong>. e sabe o que é mais difícil nessa vida? tentar achar isso na shopee.</p>
+  <p>são horas de busca pra cada achado bom. termo errado, o algoritmo te empurra pra pastel genérico ou pra rosa fofinho sem alma. periférico "aesthetic" então nem se fala — é sempre óbvio, sempre igual, nunca foge do padrão gamer de sempre.</p>
+  <p><strong>nana.rip</strong> é o resultado de eu garimpar isso pra mim mesmo e resolver compartilhar. cada item aqui passou pela busca chata que você não precisa fazer. os links vão direto pra loja original — eu só filtro o que vale o tempo.</p>
+  <p class="kawaii-line">se você também já perdeu horas procurando algo que combinasse com o seu universo e não achou, provavelmente vai gostar do que tem aqui.</p>
+</section>
+
+<footer>
+  <p>nana.rip © 2026 — curadoria alternativa. todos os links levam a lojas parceiras externas <span class="heart">♥</span></p>
+</footer>
+
+<script>
+/* ============================================================
+   EDITE SEUS PRODUTOS AQUI
+   - category: usada nos filtros (crie quantas quiser)
+   - image: URL de uma imagem (pode ser link do Unsplash, imgur, etc)
+   - link: seu link de afiliado real
+   ============================================================ */
+const products = [
+  {
+    title: "Câmera Canon EOS",
+    price: "R$ 3.199,00",
+    category: "fotografia",
+    store: "Mercado Livre",
+    image: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=600&q=80",
+    link: "#"
+  },
+  {
+    title: "Headphone Bluetooth Pro",
+    price: "R$ 289,90",
+    category: "áudio",
+    store: "Shopee",
+    image: "https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=600&q=80",
+    link: "#"
+  },
+  {
+    title: "Smartwatch Ultra Fit",
+    price: "R$ 459,00",
+    category: "wearable",
+    store: "AliExpress",
+    image: "https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=600&q=80",
+    link: "#"
+  },
+  {
+    title: "Teclado Mecânico RGB",
+    price: "R$ 319,90",
+    category: "periférico",
+    store: "Magazine Luiza",
+    image: "https://images.unsplash.com/photo-1595225476474-1eb56dbba1b3?w=600&q=80",
+    link: "#"
+  },
+  {
+    title: "Mouse Gamer 16000 DPI",
+    price: "R$ 179,90",
+    category: "gamer",
+    store: "Mercado Livre",
+    image: "https://images.unsplash.com/photo-1527814050087-3793815479db?w=600&q=80",
+    link: "#"
+  },
+  {
+    title: "Caixa Bluetooth Portátil",
+    price: "R$ 199,00",
+    category: "áudio",
+    store: "Shopee",
+    image: "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=600&q=80",
+    link: "#"
+  },
+  {
+    title: "Colar Cruz Gótica Prateada",
+    price: "R$ 64,90",
+    category: "acessórios",
+    store: "Shopee",
+    image: "https://images.unsplash.com/photo-1611652022419-a9419f74343d?w=600&q=80",
+    link: "#"
+  },
+  {
+    title: "Bolsa Transparente Yami Kawaii",
+    price: "R$ 129,90",
+    category: "moda",
+    store: "AliExpress",
+    image: "https://images.unsplash.com/photo-1591561954557-26941169b49e?w=600&q=80",
+    link: "#"
+  }
+];
+
+const grid = document.getElementById('grid');
+const filtersEl = document.getElementById('filters');
+
+// gera botões de filtro a partir das categorias existentes
+const categories = [...new Set(products.map(p => p.category))];
+categories.forEach(cat => {
+  const btn = document.createElement('button');
+  btn.className = 'filter-btn';
+  btn.dataset.filter = cat;
+  btn.textContent = cat;
+  filtersEl.appendChild(btn);
+});
+
+function sealText(str){
+  // pega até 2 palavras curtas pra caber no selo
+  return str.split(' ').slice(0,2).join(' ');
+}
+
+function renderCards(list){
+  grid.innerHTML = '';
+  list.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <div class="card-img">
+        <span class="tag">${p.category}</span>
+        <div class="seal"><span>curadoria<br>nana.rip</span></div>
+        <img src="${p.image}" alt="${p.title}" loading="lazy">
+      </div>
+      <div class="card-body">
+        <h3>${p.title}</h3>
+        <div class="price mono">${p.price}</div>
+        <a class="cta" href="${p.link}" target="_blank" rel="noopener sponsored">ver na ${p.store} ↗</a>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+renderCards(products);
+
+filtersEl.addEventListener('click', (e) => {
+  if(!e.target.classList.contains('filter-btn')) return;
+  filtersEl.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  e.target.classList.add('active');
+  const f = e.target.dataset.filter;
+  renderCards(f === 'todos' ? products : products.filter(p => p.category === f));
+});
+</script>
+
+</body>
+</html>
