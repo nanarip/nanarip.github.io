@@ -167,7 +167,9 @@
     border:1px solid var(--panel-line);
     overflow:hidden;
     transition:border-color 0.3s, transform 0.3s;
-  }
+    display:flex;
+    flex-direction:column;
+}
   .card:hover{ border-color:var(--blood-dim); transform:translateY(-3px); }
 
   .card-img{
@@ -221,7 +223,12 @@
     z-index:2;
   }
 
-  .card-body{ padding:18px 18px 20px; }
+  .card-body{
+    padding:18px 18px 20px;
+    display:flex;
+    flex-direction:column;
+    flex:1;
+}
   .card-body h3{
     font-family:'Cinzel', serif; font-weight:600;
     font-size:1.05rem; color:var(--ghost);
@@ -235,6 +242,7 @@
   }
   .cta{
     display:block; text-align:center;
+    margin-top:auto;
     font-family:'Space Mono', monospace; font-size:0.72rem;
     letter-spacing:0.08em; text-transform:uppercase;
     padding:11px 0;
