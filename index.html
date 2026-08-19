@@ -392,6 +392,7 @@
     <p class="tagline" id="genre-tagline"></p>
   </div>
   <div class="filters" id="filters"></div>
+  <div class="filters" id="price-filters"></div>
   <div class="grid" id="grid"></div>
 </main>
 
@@ -661,6 +662,20 @@ const products = [
 
 function genreById(id){ return genres.find(g => g.id === id); }
 
+// lê um preço tipo "R$ 76,62" ou "R$ 1.234,56" e devolve o número (76.62).
+// se o preço não tiver valor numérico (ex: "Ver preço no site"), devolve null.
+function parsePrice(str){
+  const match = str.match(/([\d.]+),(\d{2})/);
+  if(!match) return null;
+  return parseFloat(match[1].replace(/\./g, '') + '.' + match[2]);
+}
+
+function priceBand(p){
+  const val = parsePrice(p.price);
+  if(val === null) return null;
+  return val <= 50 ? 'ate50' : 'mais50';
+}
+
 function buildGenreGrid(){
   const el = document.getElementById('genre-grid');
   el.innerHTML = '';
@@ -731,17 +746,30 @@ function renderGenreView(genreId){
 
   const items = products.filter(p => p.genre === g.id);
   const categories = [...new Set(items.map(p => p.category))];
+  const hasPriceInfo = items.some(p => priceBand(p) !== null);
 
   const filtersEl = document.getElementById('filters');
+  const priceFiltersEl = document.getElementById('price-filters');
   filtersEl.innerHTML = '';
+  priceFiltersEl.innerHTML = '';
 
-  // garante que sempre existe um <div id="grid"> (o empty-state pode ter substituído ele)
+  // garante que sempre existe um <div id="grid" class="grid"> (o empty-state pode ter substituído ele)
   let gridEl = document.getElementById('grid');
-  if(!gridEl){
-    gridEl = document.createElement('div');
-    gridEl.className = 'grid';
-    gridEl.id = 'grid';
-    filtersEl.insertAdjacentElement('afterend', gridEl);
+  if(!gridEl || !gridEl.classList.contains('grid')){
+    const fresh = document.createElement('div');
+    fresh.className = 'grid';
+    fresh.id = 'grid';
+    if(gridEl){ gridEl.replaceWith(fresh); } else { priceFiltersEl.insertAdjacentElement('afterend', fresh); }
+  }
+
+  let activeCategory = 'todos';
+  let activePrice = 'todos';
+
+  function applyFilters(){
+    let list = items;
+    if(activeCategory !== 'todos') list = list.filter(p => p.category === activeCategory);
+    if(activePrice !== 'todos') list = list.filter(p => priceBand(p) === activePrice);
+    renderProductGrid(list);
   }
 
   if(categories.length > 1){
@@ -757,17 +785,38 @@ function renderGenreView(genreId){
       btn.textContent = cat;
       filtersEl.appendChild(btn);
     });
+    filtersEl.onclick = (e) => {
+      if(!e.target.classList.contains('filter-btn')) return;
+      filtersEl.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      e.target.classList.add('active');
+      activeCategory = e.target.dataset.filter;
+      applyFilters();
+    };
+  }
+
+  if(hasPriceInfo){
+    const priceOptions = [
+      { id: 'todos', label: 'todos os preços' },
+      { id: 'ate50', label: 'até R$ 50' },
+      { id: 'mais50', label: 'R$ 50+' }
+    ];
+    priceOptions.forEach(opt => {
+      const btn = document.createElement('button');
+      btn.className = 'filter-btn' + (opt.id === 'todos' ? ' active' : '');
+      btn.dataset.filter = opt.id;
+      btn.textContent = opt.label;
+      priceFiltersEl.appendChild(btn);
+    });
+    priceFiltersEl.onclick = (e) => {
+      if(!e.target.classList.contains('filter-btn')) return;
+      priceFiltersEl.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      e.target.classList.add('active');
+      activePrice = e.target.dataset.filter;
+      applyFilters();
+    };
   }
 
   renderProductGrid(items);
-
-  filtersEl.onclick = (e) => {
-    if(!e.target.classList.contains('filter-btn')) return;
-    filtersEl.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    e.target.classList.add('active');
-    const f = e.target.dataset.filter;
-    renderProductGrid(f === 'todos' ? items : items.filter(p => p.category === f));
-  };
 }
 
 function showView(view){
