@@ -132,7 +132,7 @@ function escapeHtml(str){
 
 async function enviarTelegram(texto){
   const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
-  await fetch(url, {
+  const res = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -142,9 +142,31 @@ async function enviarTelegram(texto){
       disable_web_page_preview: false
     })
   });
+  return res.json();
 }
 
-function montarMensagem(p){
+// manda a foto do produto com uma legenda curta (título + preço + loja).
+// devolve o JSON de resposta do Telegram, pra dar pra checar se funcionou.
+async function enviarTelegramFoto(imageUrl, legenda){
+  const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendPhoto`;
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      chat_id: TELEGRAM_CHAT_ID,
+      photo: imageUrl,
+      caption: legenda,
+      parse_mode: 'HTML'
+    })
+  });
+  return res.json();
+}
+
+function montarLegenda(p){
+  return `🦇 <b>${escapeHtml(p.title)}</b>\n💰 ${p.price} — ${escapeHtml(p.origem)}`;
+}
+
+function montarCodigo(p){
   const codigo = `{
     title: "${p.title.replace(/"/g, "'")}",
     price: "${p.price}",
@@ -155,10 +177,13 @@ function montarMensagem(p){
     image: "${p.image}",
     link: "${p.link}"
   },`;
+  return `<pre>${escapeHtml(codigo)}</pre>`;
+}
 
-  return `🦇 <b>${escapeHtml(p.title)}</b>\n` +
-         `💰 ${p.price} — ${escapeHtml(p.origem)}\n\n` +
-         `<pre>${escapeHtml(codigo)}</pre>`;
+// mensagem "tudo junto", usada só como reserva caso o envio da foto falhe
+// (ex: a loja bloqueou o Telegram de acessar aquela imagem)
+function montarMensagemCompleta(p){
+  return `${montarLegenda(p)}\n\n${montarCodigo(p)}`;
 }
 
 function esperar(ms){ return new Promise(r => setTimeout(r, ms)); }
@@ -213,7 +238,28 @@ async function main(){
   await esperar(600);
 
   for(const p of achados){
-    await enviarTelegram(montarMensagem(p));
+    let fotoOk = true;
+    try{
+      const resultado = await enviarTelegramFoto(p.image, montarLegenda(p));
+      if(!resultado.ok){
+        fotoOk = false;
+        console.error(`[Telegram] falhou ao mandar foto de "${p.title}":`, JSON.stringify(resultado));
+      }
+    }catch(e){
+      fotoOk = false;
+      console.error(`[Telegram] erro ao mandar foto de "${p.title}":`, e.message);
+    }
+
+    await esperar(600);
+
+    if(fotoOk){
+      await enviarTelegram(montarCodigo(p));
+    }else{
+      // a foto não carregou (às vezes a loja bloqueia o Telegram de acessar a imagem) —
+      // manda tudo junto em texto, pra você não perder o achado
+      await enviarTelegram(montarMensagemCompleta(p));
+    }
+
     await esperar(600); // evita bater no limite de envio do Telegram
   }
 }
@@ -222,4 +268,3 @@ main().catch(e => {
   console.error("Erro geral:", e);
   process.exit(1);
 });
-
