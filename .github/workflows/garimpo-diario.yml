@@ -1,0 +1,27 @@
+name: Garimpo diário nana.rip
+
+on:
+  schedule:
+    # 12:00 UTC = 09:00 em Belém/PA (UTC-3)
+    - cron: '0 12 * * *'
+  workflow_dispatch: {} # permite clicar em "Run workflow" manualmente a qualquer hora
+
+jobs:
+  garimpar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Baixar o código do repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Rodar o garimpo
+        env:
+          SHOPEE_APP_ID: ${{ secrets.SHOPEE_APP_ID }}
+          SHOPEE_SECRET: ${{ secrets.SHOPEE_SECRET }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: node scripts/garimpo.js
