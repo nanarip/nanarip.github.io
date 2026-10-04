@@ -2,8 +2,12 @@ name: Garimpo diário nana.rip
 
 on:
   schedule:
-    # 12:00 UTC = 09:00 em Belém/PA (UTC-3)
-    - cron: '0 12 * * *'
+    # 12:13 UTC = ~09:13 em Belém/PA (UTC-3)
+    # Usamos um minuto "torto" (13) em vez de hora cheia (0) de propósito:
+    # horários redondos como meia-noite e meio-dia UTC são os mais concorridos
+    # da infraestrutura do GitHub, e workflows podem ser pulados silenciosamente
+    # nesses horários em repositórios pequenos. Minutos tortos evitam isso.
+    - cron: '13 12 * * *'
   workflow_dispatch: {} # permite clicar em "Run workflow" manualmente a qualquer hora
 
 jobs:
