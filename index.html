@@ -194,6 +194,8 @@
     transition:border-color 0.3s var(--ease), background 0.3s var(--ease);
   }
   .genre-card:hover .count{ border-color:var(--blood-bright); background:rgba(195,20,50,0.12); }
+  .genre-card--all{ border-style:dashed; border-color:var(--blood-dim); }
+  .genre-card--all .genre-symbol{ color:var(--blood-bright); }
 
   /* ---------- genre view header ---------- */
   .genre-header{
@@ -726,6 +728,20 @@ function priceBand(p){
 function buildGenreGrid(){
   const el = document.getElementById('genre-grid');
   el.innerHTML = '';
+
+  // card especial "ver tudo" — sempre em primeiro, pra quem quer navegar sem
+  // escolher um gênero específico primeiro
+  const verTudo = document.createElement('a');
+  verTudo.href = '#tudo';
+  verTudo.className = 'genre-card genre-card--all';
+  verTudo.innerHTML = `
+    <span class="genre-symbol">✧</span>
+    <h3>Ver tudo</h3>
+    <p>o catálogo inteiro, sem escolher gênero</p>
+    <span class="count">${products.length} itens</span>
+  `;
+  el.appendChild(verTudo);
+
   genres.forEach(g => {
     const count = products.filter(p => p.genre === g.id).length;
     const card = document.createElement('a');
@@ -831,15 +847,11 @@ function renderProductGrid(list){
   list.forEach(p => grid.appendChild(createCardEl(p)));
 }
 
-function renderGenreView(genreId){
-  const g = genreById(genreId);
-  if(!g){ window.location.hash = ''; return; }
+function renderItemsView(symbol, titulo, tagline, items){
+  document.getElementById('genre-symbol-big').textContent = symbol;
+  document.getElementById('genre-title').textContent = titulo;
+  document.getElementById('genre-tagline').textContent = tagline;
 
-  document.getElementById('genre-symbol-big').textContent = g.symbol;
-  document.getElementById('genre-title').textContent = g.label;
-  document.getElementById('genre-tagline').textContent = g.tagline;
-
-  const items = products.filter(p => p.genre === g.id);
   const categories = [...new Set(items.map(p => p.category))];
   const hasPriceInfo = items.some(p => priceBand(p) !== null);
 
@@ -914,6 +926,16 @@ function renderGenreView(genreId){
   renderProductGrid(items);
 }
 
+function renderGenreView(genreId){
+  const g = genreById(genreId);
+  if(!g){ window.location.hash = ''; return; }
+  renderItemsView(g.symbol, g.label, g.tagline, products.filter(p => p.genre === g.id));
+}
+
+function renderAllView(){
+  renderItemsView('✧', 'Ver tudo', 'o catálogo inteiro, sem escolher gênero', products);
+}
+
 function showView(view){
   document.getElementById('home-view').classList.toggle('hidden', view !== 'home');
   document.getElementById('genre-view').classList.toggle('hidden', view !== 'genre');
@@ -927,6 +949,9 @@ function router(){
   const hash = window.location.hash.replace('#', '');
   if(hash === 'sobre'){
     showView('sobre');
+  } else if(hash === 'tudo'){
+    renderAllView();
+    showView('genre');
   } else if(hash && genreById(hash)){
     renderGenreView(hash);
     showView('genre');
