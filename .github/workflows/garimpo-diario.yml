@@ -3,12 +3,14 @@ name: Garimpo diário nana.rip
 on:
   schedule:
     # 12:13 UTC = ~09:13 em Belém/PA (UTC-3)
-    # Usamos um minuto "torto" (13) em vez de hora cheia (0) de propósito:
-    # horários redondos como meia-noite e meio-dia UTC são os mais concorridos
-    # da infraestrutura do GitHub, e workflows podem ser pulados silenciosamente
-    # nesses horários em repositórios pequenos. Minutos tortos evitam isso.
+    # Minuto "torto" (13) de propósito: horas redondas são as mais concorridas
+    # do GitHub e o agendamento pode ser pulado nelas.
     - cron: '13 12 * * *'
   workflow_dispatch: {} # permite clicar em "Run workflow" manualmente a qualquer hora
+
+# necessário pro robô salvar a lista de produtos já enviados (scripts/vistos.json)
+permissions:
+  contents: write
 
 jobs:
   garimpar:
@@ -29,3 +31,10 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: node scripts/garimpo.js
+
+      - name: Salvar a lista de já enviados
+        run: |
+          git config user.name "garimpo-bot"
+          git config user.email "garimpo-bot@users.noreply.github.com"
+          git add scripts/vistos.json
+          git diff --staged --quiet || (git commit -m "garimpo: atualiza lista de enviados" && git pull --rebase && git push)
