@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>nana.rip — curadoria alternativa</title>
-<meta name="description" content="curadoria alternativa por gênero: goth, pastel goth, cybergoth, punk, cyberpunk, guro-kawaii, yami-kawaii, cyber-kawaii e periféricos.">
+<meta name="description" content="curadoria alternativa por estética: goth, pastel goth, cybergoth, punk, cyberpunk, guro-kawaii, yami-kawaii, cyber-kawaii e periféricos.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Space+Grotesk:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -392,6 +392,10 @@
     letter-spacing:0.08em; color:var(--muted); text-transform:uppercase;
   }
   footer .heart{ color:var(--kawaii); }
+  footer .aviso{
+    text-transform:none; letter-spacing:0.02em; line-height:1.7;
+    max-width:560px; margin:14px auto 0; font-size:0.74rem;
+  }
 
   @media (max-width:640px){
     nav{ gap:18px; }
@@ -420,7 +424,7 @@
 <main id="home-view">
   <section class="hero">
     <h1><span class="cross">✝</span> nana.rip <span class="cross">✝</span></h1>
-    <p class="subtitle">curadoria alternativa por gênero</p>
+    <p class="subtitle">curadoria alternativa por estética</p>
     <hr class="divider">
     <p class="lede">uma vitrine com curadoria — não catálogo aleatório. escolha o universo estético que combina com você: cada link leva direto à loja original.</p>
   </section>
@@ -435,7 +439,7 @@
 <!-- ======================= VIEW DE GÊNERO ======================= -->
 <main id="genre-view" class="hidden">
   <div class="genre-header wrap">
-    <a href="#" class="back-link">&larr; voltar aos gêneros</a>
+    <a href="#" class="back-link">&larr; voltar ao início</a>
     <span class="genre-symbol-big" id="genre-symbol-big"></span>
     <h2 id="genre-title"></h2>
     <p class="tagline" id="genre-tagline"></p>
@@ -450,12 +454,13 @@
   <p class="eyebrow">✝ sobre a nana.rip</p>
   <p>essa vitrine nasceu de uma obsessão real por yami kawaii e guro kawaii — e da dificuldade de achar isso na shopee.</p>
   <p>são horas de busca pra cada achado bom. termo errado, o algoritmo empurra pra pastel genérico ou pra rosa fofinho sem alma. periférico "aesthetic" então nem se fala — sempre óbvio, sempre igual, nunca foge do padrão gamer de sempre.</p>
-  <p><strong>nana.rip</strong> é o resultado de garimpar isso e resolver compartilhar, agora organizado por gênero — pra você ir direto no universo estético que já é seu. os links vão direto pra loja original — a curadoria fica por conta daqui.</p>
+  <p><strong>nana.rip</strong> é o resultado de garimpar isso e resolver compartilhar, agora organizado por estética — pra você ir direto no universo que já é seu. os links vão direto pra loja original — a curadoria fica por conta daqui.</p>
   <p class="kawaii-line">se você também já perdeu horas procurando algo que combinasse com o seu universo e não achou, provavelmente vai gostar do que tem aqui.</p>
 </section>
 
 <footer>
-  <p>nana.rip © 2026 — curadoria alternativa. todos os links levam a lojas parceiras externas <span class="heart">♥</span></p>
+  <p>nana.rip © 2026 — curadoria alternativa <span class="heart">♥</span></p>
+  <p class="aviso">alguns links são de afiliado: se você comprar, a nana.rip recebe uma comissão, sem custo extra para você. todos os links levam a lojas externas.</p>
 </footer>
 
 <script>
@@ -737,7 +742,7 @@ function buildGenreGrid(){
   verTudo.innerHTML = `
     <span class="genre-symbol">✧</span>
     <h3>Ver tudo</h3>
-    <p>o catálogo inteiro, sem escolher gênero</p>
+    <p>o catálogo inteiro, sem escolher estética</p>
     <span class="count">${products.length} itens</span>
   `;
   el.appendChild(verTudo);
@@ -839,7 +844,7 @@ function renderProductGrid(list){
     grid.parentElement.querySelector('.empty-state')?.remove();
     const empty = document.createElement('div');
     empty.className = 'empty-state';
-    empty.innerHTML = `<span class="glyph">✝</span><p>em breve — a curadoria pra esse gênero está a caminho.</p>`;
+    empty.innerHTML = `<span class="glyph">✝</span><p>em breve — a curadoria pra essa estética está a caminho.</p>`;
     grid.replaceWith(empty);
     empty.id = 'grid';
     return;
@@ -933,7 +938,7 @@ function renderGenreView(genreId){
 }
 
 function renderAllView(){
-  renderItemsView('✧', 'Ver tudo', 'o catálogo inteiro, sem escolher gênero', products);
+  renderItemsView('✧', 'Ver tudo', 'o catálogo inteiro, sem escolher estética', products);
 }
 
 function showView(view){
