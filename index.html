@@ -385,6 +385,36 @@
   #sobre-view strong{ color:var(--ghost); font-weight:500; }
   #sobre-view .kawaii-line{ color:var(--kawaii); font-style:italic; }
 
+  /* ---------- "por que entrou" ---------- */
+  .porque{
+    font-size:0.82rem; line-height:1.55; color:var(--muted);
+    font-style:italic; margin:-2px 0 12px;
+  }
+  .porque::before{ content:'✝ '; color:var(--blood-dim); font-style:normal; }
+
+  /* ---------- busca ---------- */
+  .search-wrap{ max-width:520px; margin:28px auto 0; padding:0 28px; }
+  .search-wrap input, .home-search input{
+    width:100%; appearance:none; -webkit-appearance:none; border-radius:0;
+    background:var(--panel); color:var(--ghost);
+    border:1px solid var(--panel-line);
+    padding:12px 16px;
+    font-family:'Space Mono', monospace; font-size:0.78rem; letter-spacing:0.06em;
+    outline:none;
+    transition:border-color 0.3s var(--ease), box-shadow 0.3s var(--ease);
+  }
+  .search-wrap input::placeholder, .home-search input::placeholder{ color:var(--muted); opacity:0.7; }
+  .search-wrap input:focus, .home-search input:focus{
+    border-color:var(--blood); box-shadow:0 0 0 3px rgba(195,20,50,0.15);
+  }
+  .home-search{ display:flex; gap:8px; max-width:520px; margin:30px auto 0; }
+  .home-search button{
+    font-family:'Space Mono', monospace; font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase;
+    padding:0 20px; border:1px solid var(--blood); background:transparent; color:var(--blood-bright);
+    transition:all 0.3s var(--ease);
+  }
+  .home-search button:hover{ background:var(--blood); color:var(--ghost); transform:scale(1.04); }
+
   /* ---------- footer ---------- */
   footer{ border-top:1px solid var(--panel-line); padding:36px 28px; text-align:center; }
   footer p{
@@ -427,6 +457,10 @@
     <p class="subtitle">curadoria alternativa por estética</p>
     <hr class="divider">
     <p class="lede">uma vitrine com curadoria — não catálogo aleatório. escolha o universo estético que combina com você: cada link leva direto à loja original.</p>
+    <form class="home-search" id="home-search" role="search">
+      <input type="search" id="home-search-input" placeholder="buscar um item (ex: moletom, colar, mouse)" autocomplete="off" aria-label="buscar um item">
+      <button type="submit">buscar</button>
+    </form>
   </section>
   <section class="destaques">
     <p class="eyebrow">✝ destaques</p>
@@ -443,6 +477,9 @@
     <span class="genre-symbol-big" id="genre-symbol-big"></span>
     <h2 id="genre-title"></h2>
     <p class="tagline" id="genre-tagline"></p>
+  </div>
+  <div class="search-wrap" id="search-wrap">
+    <input type="search" id="search-input" placeholder="buscar nesta página (ex: cruz, rgb, rosa)" autocomplete="off" aria-label="buscar nesta página">
   </div>
   <div class="filters" id="filters"></div>
   <div class="filters" id="price-filters"></div>
@@ -464,6 +501,34 @@
 </footer>
 
 <script>
+/* ============================================================
+   ANALYTICS (Google Analytics 4)
+   Cole o seu ID de medição entre as aspas, tipo "G-ABC123XYZ".
+   Enquanto estiver vazio, nada é carregado nem medido.
+   ============================================================ */
+const GA_ID = "";
+
+(function iniciarAnalytics(){
+  if(!GA_ID) return;
+  const sc = document.createElement('script');
+  sc.async = true;
+  sc.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
+  document.head.appendChild(sc);
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = function(){ window.dataLayer.push(arguments); };
+  window.gtag('js', new Date());
+  window.gtag('config', GA_ID);
+  const aviso = document.createElement('p');
+  aviso.className = 'aviso';
+  aviso.textContent = 'este site usa o Google Analytics para medir visitas e cliques.';
+  document.querySelector('footer').appendChild(aviso);
+})();
+
+// registra um evento sem nunca quebrar o site se o analytics estiver desligado
+function registrar(nome, params){
+  try{ if(window.gtag) window.gtag('event', nome, params || {}); }catch(e){}
+}
+
 /* ============================================================
    GÊNEROS
    - id: usado na URL (#id) — não use espaço, use hífen
@@ -489,6 +554,10 @@ const genres = [
    - article: "na" ou "no", conforme a loja
    - image: link da foto (ou "imagens/nome-do-arquivo.png" se você hospedou no GitHub)
    - link: seu link de afiliado real
+   - porque: (opcional) uma linha, escrita por você, dizendo por que esse item entrou.
+     Aparece no card. Deixe "" pra não mostrar nada.
+     Atenção: não use aspas duplas (") dentro do texto, só aspas simples (') ou curvas (“ ”),
+     senão o site inteiro quebra.
    ============================================================ */
 const products = [
   // ---- MOLETOMS ----
@@ -716,6 +785,31 @@ const products = [
 
 function genreById(id){ return genres.find(g => g.id === id); }
 
+function escapeHtml(str){
+  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+// tira acento e caixa alta, pra "calca" achar "Calça"
+function normalizar(str){
+  return String(str).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+}
+
+function textoDeBusca(p){
+  const g = genreById(p.genre);
+  return normalizar([p.title, p.porque || '', p.category, p.store, g ? g.label : ''].join(' '));
+}
+
+// o item bate se contiver TODAS as palavras digitadas (em qualquer ordem)
+function bate(p, consulta){
+  const termos = normalizar(consulta).split(/\s+/).filter(Boolean);
+  if(!termos.length) return true;
+  const texto = textoDeBusca(p);
+  return termos.every(t => texto.includes(t));
+}
+
+// termo digitado na busca da home, levado pra tela "Ver tudo"
+let consultaPendente = '';
+
 // lê um preço tipo "R$ 76,62" ou "R$ 1.234,56" e devolve o número (76.62).
 // se o preço não tiver valor numérico (ex: "Ver preço no site"), devolve null.
 function parsePrice(str){
@@ -794,10 +888,17 @@ function createCardEl(p){
     </div>
     <div class="card-body">
       <h3>${p.title}</h3>
+      ${p.porque ? `<p class="porque">${escapeHtml(p.porque)}</p>` : ''}
       <div class="price mono">${p.price}</div>
       <a class="cta" href="${p.link}" target="_blank" rel="noopener sponsored">ver ${p.article} ${p.store} ↗</a>
     </div>
   `;
+
+  card.querySelector('.cta').addEventListener('click', () => {
+    registrar('clique_produto', {
+      produto: p.title, loja: p.store, estetica: p.genre || '', categoria: p.category
+    });
+  });
 
   if(temVarias){
     const track = card.querySelector('.carousel-track');
@@ -837,14 +938,21 @@ function buildFeatured(){
   items.forEach(p => el.appendChild(createCardEl(p)));
 }
 
-function renderProductGrid(list){
-  const grid = document.getElementById('grid');
+function renderProductGrid(list, msgVazia){
+  let grid = document.getElementById('grid');
+  // se a grade foi trocada por uma mensagem de "vazio", restaura uma grade de verdade
+  if(!grid.classList.contains('grid')){
+    const fresh = document.createElement('div');
+    fresh.className = 'grid';
+    fresh.id = 'grid';
+    grid.replaceWith(fresh);
+    grid = fresh;
+  }
   grid.innerHTML = '';
   if(list.length === 0){
-    grid.parentElement.querySelector('.empty-state')?.remove();
     const empty = document.createElement('div');
     empty.className = 'empty-state';
-    empty.innerHTML = `<span class="glyph">✝</span><p>em breve — a curadoria pra essa estética está a caminho.</p>`;
+    empty.innerHTML = `<span class="glyph">✝</span><p>${msgVazia || 'em breve — a curadoria pra essa estética está a caminho.'}</p>`;
     grid.replaceWith(empty);
     empty.id = 'grid';
     return;
@@ -876,13 +984,31 @@ function renderItemsView(symbol, titulo, tagline, items){
 
   let activeCategory = 'todos';
   let activePrice = 'todos';
+  let activeSearch = consultaPendente;
+  consultaPendente = '';
+
+  const searchWrap = document.getElementById('search-wrap');
+  const searchInput = document.getElementById('search-input');
+  searchWrap.classList.toggle('hidden', items.length === 0);
+  searchInput.value = activeSearch;
 
   function applyFilters(){
     let list = items;
     if(activeCategory !== 'todos') list = list.filter(p => p.category === activeCategory);
     if(activePrice !== 'todos') list = list.filter(p => priceBand(p) === activePrice);
-    renderProductGrid(list);
+    if(activeSearch.trim()) list = list.filter(p => bate(p, activeSearch));
+    renderProductGrid(list, items.length ? 'nada encontrado com esses filtros. tente outra palavra ou limpe a busca.' : undefined);
   }
+
+  let timerBusca;
+  searchInput.oninput = () => {
+    activeSearch = searchInput.value;
+    applyFilters();
+    clearTimeout(timerBusca);
+    timerBusca = setTimeout(() => {
+      if(activeSearch.trim().length >= 3) registrar('search', { search_term: activeSearch.trim() });
+    }, 900);
+  };
 
   if(categories.length > 1){
     const allBtn = document.createElement('button');
@@ -924,11 +1050,13 @@ function renderItemsView(symbol, titulo, tagline, items){
       priceFiltersEl.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
       e.target.classList.add('active');
       activePrice = e.target.dataset.filter;
+      registrar('filtro_preco', { faixa: activePrice });
       applyFilters();
     };
   }
 
-  renderProductGrid(items);
+  applyFilters();
+  if(activeSearch.trim().length >= 3) registrar('search', { search_term: activeSearch.trim() });
 }
 
 function renderGenreView(genreId){
@@ -953,12 +1081,15 @@ function showView(view){
 function router(){
   const hash = window.location.hash.replace('#', '');
   if(hash === 'sobre'){
+    registrar('ver_sobre');
     showView('sobre');
   } else if(hash === 'tudo'){
     renderAllView();
+    registrar('ver_estetica', { estetica: 'tudo' });
     showView('genre');
   } else if(hash && genreById(hash)){
     renderGenreView(hash);
+    registrar('ver_estetica', { estetica: hash });
     showView('genre');
   } else {
     showView('home');
@@ -975,6 +1106,18 @@ document.getElementById('logo-home').addEventListener('click', () => {
 
 buildGenreGrid();
 buildFeatured();
+
+// busca da home: leva o termo pra tela "Ver tudo", já filtrada
+document.getElementById('home-search').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const input = document.getElementById('home-search-input');
+  const q = input.value.trim();
+  if(!q) return;
+  consultaPendente = q;
+  input.value = '';
+  if(window.location.hash === '#tudo'){ router(); } else { window.location.hash = 'tudo'; }
+});
+
 window.addEventListener('hashchange', router);
 router();
 </script>
