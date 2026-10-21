@@ -248,6 +248,7 @@ function montarCodigo(p){
     price: "${p.price}",
     category: "?",
     genre: "?",
+    porque: "",
     store: "${p.store}",
     article: "${p.article}",
     image: "${p.image}",
