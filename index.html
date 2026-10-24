@@ -1,616 +1,3 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>nana.rip — curadoria alternativa</title>
-<meta name="description" content="curadoria alternativa por estética: goth, pastel goth, cybergoth, punk, cyberpunk, guro-kawaii, yami-kawaii, cyber-kawaii e periféricos.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Space+Grotesk:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --void:#0a0807;
-    --panel:#130e0f;
-    --panel-line:#241819;
-    --blood:#c31432;
-    --blood-dim:#6e0f1c;
-    --blood-bright:#ff2f4f;
-    --ghost:#f2e9e4;
-    --muted:#a3908d;
-    --kawaii:#ff8fc7;
-    --cyber:#7ff0e0;
-    --ease:cubic-bezier(.22,1,.36,1);
-  }
-
-  *{ margin:0; padding:0; box-sizing:border-box; }
-  html{ scroll-behavior:smooth; }
-
-  body{
-    background:var(--void);
-    background-image:
-      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(195,20,50,0.16), transparent),
-      radial-gradient(ellipse 60% 40% at 100% 100%, rgba(127,240,224,0.05), transparent);
-    color:var(--ghost);
-    font-family:'Space Grotesk', sans-serif;
-    -webkit-font-smoothing:antialiased;
-    overflow-x:hidden;
-  }
-
-  ::selection{ background:var(--blood); color:var(--ghost); }
-  a{ color:inherit; text-decoration:none; }
-  button{ font:inherit; cursor:pointer; }
-
-  .mono{ font-family:'Space Mono', monospace; letter-spacing:0.04em; }
-  .display{ font-family:'Cinzel', serif; }
-  .wrap{ max-width:1180px; margin:0 auto; padding:0 28px; }
-  .hidden{ display:none !important; }
-
-  /* ---------- header ---------- */
-  header{
-    position:sticky; top:0; z-index:50;
-    background:rgba(10,8,7,0.86);
-    backdrop-filter:blur(10px);
-    border-bottom:1px solid var(--panel-line);
-  }
-  .header-inner{
-    display:flex; align-items:center; justify-content:space-between;
-    padding:18px 28px; max-width:1180px; margin:0 auto;
-  }
-  .wordmark{
-    font-family:'Cinzel', serif; font-size:1.5rem; font-weight:700;
-    color:var(--blood-bright); letter-spacing:0.06em;
-    display:flex; align-items:center; gap:10px;
-    cursor:pointer;
-    transition:text-shadow 0.35s var(--ease), letter-spacing 0.35s var(--ease);
-  }
-  @media (hover:hover) and (pointer:fine){
-  .wordmark:hover{
-    text-shadow:0 0 18px rgba(255,47,79,0.55);
-    letter-spacing:0.09em;
-  }
-  }
-  .wordmark .cross{ font-size:1.1rem; opacity:0.75; display:inline-block; animation:float 5s ease-in-out infinite; }
-  .wordmark .cross:nth-child(3){ animation-delay:1.4s; }
-  @keyframes float{
-    0%,100%{ transform:translateY(0) rotate(0deg); }
-    50%{ transform:translateY(-3px) rotate(-6deg); }
-  }
-
-  nav{ display:flex; gap:32px; }
-  nav a{
-    position:relative;
-    font-family:'Space Mono', monospace; font-size:0.78rem;
-    text-transform:uppercase; letter-spacing:0.14em;
-    color:var(--muted);
-    padding-bottom:6px;
-    transition:color 0.3s var(--ease);
-  }
-  nav a::after{
-    content:'';
-    position:absolute; left:0; bottom:0;
-    width:0; height:1px;
-    background:var(--blood-bright);
-    transition:width 0.35s var(--ease);
-  }
-  @media (hover:hover) and (pointer:fine){
-  nav a:hover{ color:var(--ghost); }
-  }
-  nav a.active::after{ width:100%; }
-  @media (hover:hover) and (pointer:fine){
-  nav a:hover::after{ width:100%; }
-  }
-  nav a.active{ color:var(--ghost); }
-
-  /* ---------- ticker ---------- */
-  .ticker{
-    background:var(--blood-dim);
-    color:var(--ghost);
-    overflow:hidden; white-space:nowrap;
-    border-bottom:1px solid var(--panel-line);
-  }
-  .ticker-track{
-    display:inline-block; padding:7px 0;
-    font-family:'Space Mono', monospace; font-size:0.72rem;
-    letter-spacing:0.18em; text-transform:uppercase;
-    animation:scroll-left 34s linear infinite;
-  }
-  .ticker-track span{ margin:0 26px; opacity:0.85; }
-  @keyframes scroll-left{
-    from{ transform:translateX(0); }
-    to{ transform:translateX(-50%); }
-  }
-
-  /* ---------- hero ---------- */
-  .hero{ text-align:center; padding:88px 28px 44px; }
-  .hero h1{
-    font-family:'Cinzel', serif; font-weight:600;
-    font-size:clamp(2.6rem, 7vw, 4.6rem);
-    color:var(--ghost); letter-spacing:0.03em;
-  }
-  .hero h1 .cross{ color:var(--blood); font-size:0.65em; vertical-align:middle; }
-  .hero .subtitle{
-    margin-top:18px;
-    font-family:'Space Mono', monospace; font-size:0.82rem;
-    letter-spacing:0.12em; text-transform:uppercase; color:var(--muted);
-  }
-  .divider{
-    max-width:520px; margin:34px auto;
-    border:none; border-top:1px dashed var(--panel-line);
-    position:relative;
-  }
-  .divider::before, .divider::after{
-    content:'✝'; position:absolute; top:-9px; color:var(--blood-dim); font-size:0.8rem;
-  }
-  .divider::before{ left:0; } .divider::after{ right:0; }
-  .hero .lede{
-    max-width:620px; margin:0 auto;
-    font-size:1rem; line-height:1.75; color:var(--muted); font-style:italic;
-  }
-
-  /* ---------- genre grid (home) ---------- */
-  .genre-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill, minmax(250px, 1fr));
-    gap:18px;
-    padding:20px 28px 100px;
-    max-width:1180px; margin:0 auto;
-  }
-  .genre-card{
-    position:relative;
-    background:var(--panel);
-    border:1px solid var(--panel-line);
-    padding:30px 22px;
-    text-align:center;
-    overflow:hidden;
-    transition:transform 0.4s var(--ease), border-color 0.4s var(--ease), box-shadow 0.4s var(--ease);
-  }
-  .genre-card::before{
-    content:'';
-    position:absolute; inset:0;
-    background:radial-gradient(circle at 50% 0%, rgba(195,20,50,0.14), transparent 70%);
-    opacity:0; transition:opacity 0.4s var(--ease);
-  }
-  @media (hover:hover) and (pointer:fine){
-  .genre-card:hover{
-    transform:translateY(-7px) scale(1.025);
-    border-color:var(--blood);
-    box-shadow:0 18px 40px rgba(195,20,50,0.22);
-  }
-  }
-  @media (hover:hover) and (pointer:fine){
-  .genre-card:hover::before{ opacity:1; }
-  }
-  .genre-symbol{
-    font-size:1.9rem; color:var(--blood-dim);
-    display:block; margin-bottom:14px;
-    transition:color 0.4s var(--ease), transform 0.4s var(--ease);
-  }
-  @media (hover:hover) and (pointer:fine){
-  .genre-card:hover .genre-symbol{ color:var(--blood-bright); transform:scale(1.18) rotate(-4deg); }
-  }
-  .genre-card h3{
-    font-family:'Cinzel', serif; font-weight:600; font-size:1.15rem;
-    color:var(--ghost); letter-spacing:0.03em; margin-bottom:8px;
-    position:relative; z-index:1;
-  }
-  .genre-card p{
-    font-size:0.82rem; color:var(--muted); line-height:1.5;
-    position:relative; z-index:1;
-  }
-  .genre-card .count{
-    display:inline-block; margin-top:14px;
-    font-family:'Space Mono', monospace; font-size:0.65rem;
-    letter-spacing:0.1em; text-transform:uppercase;
-    color:var(--blood-bright); border:1px solid var(--blood-dim);
-    padding:4px 10px; position:relative; z-index:1;
-    transition:border-color 0.3s var(--ease), background 0.3s var(--ease);
-  }
-  @media (hover:hover) and (pointer:fine){
-  .genre-card:hover .count{ border-color:var(--blood-bright); background:rgba(195,20,50,0.12); }
-  }
-  .genre-card--all{ border-style:dashed; border-color:var(--blood-dim); }
-  .genre-card--all .genre-symbol{ color:var(--blood-bright); }
-
-  /* ---------- genre view header ---------- */
-  .genre-header{
-    text-align:center; padding:56px 28px 30px;
-  }
-  .back-link{
-    display:inline-flex; align-items:center; gap:6px;
-    font-family:'Space Mono', monospace; font-size:0.72rem;
-    letter-spacing:0.1em; text-transform:uppercase; color:var(--muted);
-    margin-bottom:26px; transition:color 0.3s var(--ease), transform 0.3s var(--ease);
-  }
-  @media (hover:hover) and (pointer:fine){
-  .back-link:hover{ color:var(--blood-bright); transform:translateX(-4px); }
-  }
-  .genre-header .genre-symbol-big{
-    font-size:2.4rem; color:var(--blood-bright); display:block; margin-bottom:10px;
-  }
-  .genre-header h2{
-    font-family:'Cinzel', serif; font-weight:600;
-    font-size:clamp(2rem, 5vw, 3rem); letter-spacing:0.03em;
-  }
-  .genre-header .tagline{
-    margin-top:12px; font-family:'Space Mono', monospace; font-size:0.8rem;
-    letter-spacing:0.1em; text-transform:uppercase; color:var(--muted);
-  }
-
-  /* ---------- filters ---------- */
-  .filters{
-    display:flex; flex-wrap:wrap; justify-content:center; gap:10px;
-    padding:36px 28px 10px;
-  }
-  .filter-btn{
-    font-family:'Space Mono', monospace;
-    font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase;
-    padding:9px 18px;
-    border:1px solid var(--panel-line);
-    background:transparent; color:var(--muted);
-    transition:all 0.3s var(--ease);
-  }
-  @media (hover:hover) and (pointer:fine){
-  .filter-btn:hover{ border-color:var(--blood); color:var(--ghost); transform:translateY(-2px); }
-  }
-  .filter-btn.active{ background:var(--blood); border-color:var(--blood); color:var(--ghost); }
-
-  /* ---------- grid ---------- */
-  .grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));
-    gap:24px;
-    padding:36px 28px 100px;
-    max-width:1180px; margin:0 auto;
-  }
-
-  .card{
-    position:relative;
-    background:var(--panel);
-    border:1px solid var(--panel-line);
-    overflow:hidden;
-    display:flex; flex-direction:column;
-    transition:border-color 0.4s var(--ease), transform 0.4s var(--ease), box-shadow 0.4s var(--ease);
-  }
-  @media (hover:hover) and (pointer:fine){
-  .card:hover{
-    border-color:var(--blood-dim);
-    transform:translateY(-5px);
-    box-shadow:0 16px 36px rgba(0,0,0,0.4);
-  }
-  }
-
-  .card-img{ position:relative; aspect-ratio:4/3; overflow:hidden; background:#1a1213; }
-
-  /* carrossel: rolagem nativa por toque no celular, com scroll-snap pra "encaixar" cada foto */
-  .carousel-track{
-    display:flex; width:100%; height:100%;
-    overflow-x:auto; scroll-snap-type:x mandatory;
-    scrollbar-width:none; -ms-overflow-style:none;
-  }
-  .carousel-track::-webkit-scrollbar{ display:none; }
-  .carousel-track img{
-    flex:0 0 100%; width:100%; height:100%; object-fit:cover;
-    scroll-snap-align:start;
-    /* tratamento automático: dessatura e esquenta a imagem levemente pra toda
-       foto (editada ou direto da loja) conversar com a mesma paleta do site */
-    filter:saturate(0.78) contrast(1.12) brightness(0.95);
-    transition:transform 0.6s var(--ease), filter 0.6s var(--ease);
-  }
-  @media (hover:hover) and (pointer:fine){
-  .card:hover .carousel-track img{ filter:saturate(0.95) contrast(1.15) brightness(1); }
-  }
-  @media (hover:hover) and (pointer:fine){
-  .card:hover .carousel-track img.is-active{ transform:scale(1.06); }
-  }
-
-  .card-img::after{
-    content:''; position:absolute; inset:0; pointer-events:none;
-    /* tinge toda a foto com um verniz vermelho/escuro (identidade visual
-       automática) e ainda escurece embaixo pra dar legibilidade ao texto */
-    background:linear-gradient(180deg, rgba(195,20,50,0.14) 0%, rgba(10,8,7,0.18) 45%, rgba(10,8,7,0.86) 100%);
-  }
-
-  .carousel-arrow{
-    position:absolute; top:50%; transform:translateY(-50%);
-    width:30px; height:30px; border-radius:50%;
-    display:flex; align-items:center; justify-content:center;
-    background:rgba(10,8,7,0.6); border:1px solid var(--panel-line);
-    color:var(--ghost); font-size:0.9rem; z-index:3;
-    opacity:0; transition:opacity 0.3s var(--ease), border-color 0.3s var(--ease), background 0.3s var(--ease);
-  }
-  @media (hover:hover) and (pointer:fine){
-  .carousel-arrow:hover{ border-color:var(--blood-bright); background:rgba(195,20,50,0.5); }
-  }
-  .carousel-arrow.prev{ left:10px; } .carousel-arrow.next{ right:10px; }
-  @media (hover:hover) and (pointer:fine){
-  .card:hover .carousel-arrow{ opacity:1; }
-  }
-
-  .carousel-dots{
-    position:absolute; bottom:10px; left:0; right:0; z-index:3;
-    display:flex; justify-content:center; gap:6px;
-  }
-  .carousel-dots span{
-    width:5px; height:5px; border-radius:50%;
-    background:rgba(242,233,228,0.45);
-    transition:background 0.25s var(--ease), transform 0.25s var(--ease);
-  }
-  .carousel-dots span.active{ background:var(--blood-bright); transform:scale(1.3); }
-
-  .seal{
-    position:absolute; top:12px; right:12px;
-    width:52px; height:52px; border-radius:50%;
-    border:1.5px solid var(--blood-bright);
-    display:flex; align-items:center; justify-content:center;
-    background:rgba(10,8,7,0.55); backdrop-filter:blur(2px);
-    opacity:0; transform:scale(0.7) rotate(-12deg);
-    transition:opacity 0.35s var(--ease), transform 0.35s var(--ease);
-    z-index:2;
-  }
-  @media (hover:hover) and (pointer:fine){
-  .card:hover .seal{ opacity:1; transform:scale(1) rotate(0deg); }
-  }
-  .seal span{
-    font-family:'Cinzel', serif; font-size:0.52rem;
-    letter-spacing:0.06em; text-align:center; line-height:1.15;
-    color:var(--ghost); text-transform:uppercase;
-  }
-
-  .tag{
-    position:absolute; top:12px; left:12px;
-    font-family:'Space Mono', monospace; font-size:0.62rem;
-    letter-spacing:0.1em; text-transform:uppercase;
-    padding:4px 9px; border:1px solid var(--blood);
-    color:var(--blood-bright); background:rgba(10,8,7,0.6);
-    z-index:2;
-  }
-
-  .card-body{ padding:18px 18px 20px; display:flex; flex-direction:column; flex:1; }
-  .card-body h3{
-    font-family:'Cinzel', serif; font-weight:600; font-size:1.05rem;
-    color:var(--ghost); margin-bottom:8px; line-height:1.3;
-    transition:color 0.3s var(--ease);
-  }
-  @media (hover:hover) and (pointer:fine){
-  .card:hover .card-body h3{ color:var(--blood-bright); }
-  }
-  .price{ font-family:'Space Mono', monospace; color:var(--blood-bright); font-size:0.95rem; margin-bottom:14px; }
-  .cta{
-    display:block; text-align:center; margin-top:auto;
-    font-family:'Space Mono', monospace; font-size:0.72rem;
-    letter-spacing:0.08em; text-transform:uppercase;
-    padding:11px 0; border:1px solid var(--blood-dim); color:var(--muted);
-    transition:all 0.3s var(--ease);
-  }
-  @media (hover:hover) and (pointer:fine){
-  .cta:hover{ background:var(--blood); border-color:var(--blood); color:var(--ghost); transform:scale(1.03); }
-  }
-
-  /* ---------- empty state ---------- */
-  .empty-state{
-    text-align:center; padding:60px 28px 110px; max-width:520px; margin:0 auto;
-  }
-  .empty-state .glyph{ font-size:2.2rem; color:var(--blood-dim); display:block; margin-bottom:18px; }
-  .empty-state p{ color:var(--muted); font-style:italic; line-height:1.7; }
-
-  .eyebrow{
-    font-family:'Space Mono', monospace; font-size:0.72rem;
-    letter-spacing:0.16em; text-transform:uppercase; color:var(--blood-bright); margin-bottom:18px;
-  }
-
-  /* ---------- destaques (home) ---------- */
-  .destaques{ padding:10px 28px 10px; max-width:1180px; margin:0 auto; }
-  .destaques .eyebrow{ text-align:center; }
-  .destaques-grid{
-    display:flex;
-    flex-wrap:wrap;
-    justify-content:center;
-    gap:24px;
-    padding:0 0 60px;
-  }
-  .destaques-grid .card{
-    flex:1 1 280px;
-    max-width:340px;
-  }
-
-  /* ---------- sobre ---------- */
-  #sobre-view{ max-width:680px; margin:0 auto; padding:80px 28px 100px; }
-  #sobre-view p{ font-size:1.02rem; line-height:1.85; color:var(--muted); margin-bottom:18px; }
-  #sobre-view strong{ color:var(--ghost); font-weight:500; }
-  #sobre-view .kawaii-line{ color:var(--kawaii); font-style:italic; }
-
-  /* ---------- "por que entrou" ---------- */
-  .porque{
-    font-size:0.82rem; line-height:1.55; color:var(--muted);
-    font-style:italic; margin:-2px 0 12px;
-  }
-  .porque::before{ content:'✝ '; color:var(--blood-dim); font-style:normal; }
-
-  /* ---------- busca ---------- */
-  .search-wrap{ max-width:520px; margin:28px auto 0; padding:0 28px; }
-  .search-wrap input, .home-search input{
-    width:100%; appearance:none; -webkit-appearance:none; border-radius:0;
-    background:var(--panel); color:var(--ghost);
-    border:1px solid var(--panel-line);
-    padding:12px 16px;
-    font-family:'Space Mono', monospace; font-size:0.78rem; letter-spacing:0.06em;
-    outline:none;
-    transition:border-color 0.3s var(--ease), box-shadow 0.3s var(--ease);
-  }
-  .search-wrap input::placeholder, .home-search input::placeholder{ color:var(--muted); opacity:0.7; }
-  .search-wrap input:focus, .home-search input:focus{
-    border-color:var(--blood); box-shadow:0 0 0 3px rgba(195,20,50,0.15);
-  }
-  .home-search{ display:flex; gap:8px; max-width:520px; margin:30px auto 0; }
-  .home-search button{
-    font-family:'Space Mono', monospace; font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase;
-    padding:0 20px; border:1px solid var(--blood); background:transparent; color:var(--blood-bright);
-    transition:all 0.3s var(--ease);
-  }
-  @media (hover:hover) and (pointer:fine){
-  .home-search button:hover{ background:var(--blood); color:var(--ghost); transform:scale(1.04); }
-  }
-
-  /* ---------- footer ---------- */
-  footer{ border-top:1px solid var(--panel-line); padding:36px 28px; text-align:center; }
-  footer p{
-    font-family:'Space Mono', monospace; font-size:0.7rem;
-    letter-spacing:0.08em; color:var(--muted); text-transform:uppercase;
-  }
-  footer .heart{ color:var(--kawaii); }
-  footer .aviso{
-    text-transform:none; letter-spacing:0.02em; line-height:1.7;
-    max-width:560px; margin:14px auto 0; font-size:0.74rem;
-  }
-
-  /* ---------- toque (celular e tablet) ---------- */
-  /* Sem mouse não existe "hover": os efeitos acima só valem em telas com mouse.
-     No toque o hover "gruda" depois do dedo, por isso foi separado. */
-  a, button{ -webkit-tap-highlight-color:transparent; }
-  .carousel-track{ overscroll-behavior-x:contain; }
-
-  @media (hover:none){
-    /* o selo carimba uma vez, quando o card aparece na tela (classe aplicada pelo JS) */
-    .card.in-view .seal{ opacity:1; transform:scale(1) rotate(0deg); }
-    /* resposta ao toque: dura só enquanto o dedo está na tela */
-    .genre-card:active{ transform:scale(0.98); border-color:var(--blood); }
-    .cta:active, .home-search button:active{ background:var(--blood); border-color:var(--blood); color:var(--ghost); }
-    .filter-btn:active{ border-color:var(--blood); color:var(--ghost); }
-  }
-
-  @media (max-width:640px){
-    nav{ gap:18px; }
-    .header-inner{ padding:14px 20px; }
-    .hero{ padding:64px 20px 36px; }
-  }
-</style>
-</head>
-<body>
-
-<header>
-  <div class="header-inner">
-    <div class="wordmark" id="logo-home"><span class="cross">✝</span> nana.rip <span class="cross">✝</span></div>
-    <nav>
-      <a href="#" id="nav-home" class="active">início</a>
-      <a href="#sobre" id="nav-sobre">sobre</a>
-    </nav>
-  </div>
-</header>
-
-<div class="ticker">
-  <div class="ticker-track" id="ticker-track"></div>
-</div>
-
-<!-- ======================= HOME: grade de gêneros ======================= -->
-<main id="home-view">
-  <section class="hero">
-    <h1><span class="cross">✝</span> nana.rip <span class="cross">✝</span></h1>
-    <p class="subtitle">curadoria alternativa por estética</p>
-    <hr class="divider">
-    <p class="lede">uma vitrine com curadoria — não catálogo aleatório. escolha o universo estético que combina com você: cada link leva direto à loja original.</p>
-    <form class="home-search" id="home-search" role="search">
-      <input type="search" id="home-search-input" placeholder="buscar um item (ex: moletom, colar, mouse)" autocomplete="off" aria-label="buscar um item">
-      <button type="submit">buscar</button>
-    </form>
-  </section>
-  <section class="destaques">
-    <p class="eyebrow">✝ destaques</p>
-    <div class="grid destaques-grid" id="featured-grid"></div>
-  </section>
-
-  <div class="genre-grid" id="genre-grid"></div>
-</main>
-
-<!-- ======================= VIEW DE GÊNERO ======================= -->
-<main id="genre-view" class="hidden">
-  <div class="genre-header wrap">
-    <a href="#" class="back-link">&larr; voltar ao início</a>
-    <span class="genre-symbol-big" id="genre-symbol-big"></span>
-    <h2 id="genre-title"></h2>
-    <p class="tagline" id="genre-tagline"></p>
-  </div>
-  <div class="search-wrap" id="search-wrap">
-    <input type="search" id="search-input" placeholder="buscar nesta página (ex: cruz, rgb, rosa)" autocomplete="off" aria-label="buscar nesta página">
-  </div>
-  <div class="filters" id="filters"></div>
-  <div class="filters" id="price-filters"></div>
-  <div class="grid" id="grid"></div>
-</main>
-
-<!-- ======================= SOBRE ======================= -->
-<section id="sobre-view" class="hidden">
-  <p class="eyebrow">✝ sobre a nana.rip</p>
-  <p>essa vitrine nasceu de uma obsessão real por yami kawaii e guro kawaii — e da dificuldade de achar isso na shopee.</p>
-  <p>são horas de busca pra cada achado bom. termo errado, o algoritmo empurra pra pastel genérico ou pra rosa fofinho sem alma. periférico "aesthetic" então nem se fala — sempre óbvio, sempre igual, nunca foge do padrão gamer de sempre.</p>
-  <p><strong>nana.rip</strong> é o resultado de garimpar isso e resolver compartilhar, agora organizado por estética — pra você ir direto no universo que já é seu. os links vão direto pra loja original — a curadoria fica por conta daqui.</p>
-  <p class="kawaii-line">se você também já perdeu horas procurando algo que combinasse com o seu universo e não achou, provavelmente vai gostar do que tem aqui.</p>
-</section>
-
-<footer>
-  <p>nana.rip © 2026 — curadoria alternativa <span class="heart">♥</span></p>
-  <p class="aviso">alguns links são de afiliado: se você comprar, a nana.rip recebe uma comissão, sem custo extra para você. todos os links levam a lojas externas.</p>
-</footer>
-
-<script>
-/* ============================================================
-   ANALYTICS (Google Analytics 4)
-   Cole o seu ID de medição entre as aspas, tipo "G-ABC123XYZ".
-   Enquanto estiver vazio, nada é carregado nem medido.
-   ============================================================ */
-const GA_ID = "";
-
-(function iniciarAnalytics(){
-  if(!GA_ID) return;
-  const sc = document.createElement('script');
-  sc.async = true;
-  sc.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
-  document.head.appendChild(sc);
-  window.dataLayer = window.dataLayer || [];
-  window.gtag = function(){ window.dataLayer.push(arguments); };
-  window.gtag('js', new Date());
-  window.gtag('config', GA_ID);
-  const aviso = document.createElement('p');
-  aviso.className = 'aviso';
-  aviso.textContent = 'este site usa o Google Analytics para medir visitas e cliques.';
-  document.querySelector('footer').appendChild(aviso);
-})();
-
-// registra um evento sem nunca quebrar o site se o analytics estiver desligado
-function registrar(nome, params){
-  try{ if(window.gtag) window.gtag('event', nome, params || {}); }catch(e){}
-}
-
-/* ============================================================
-   GÊNEROS
-   - id: usado na URL (#id) — não use espaço, use hífen
-   - symbol: um caractere/símbolo pra representar o gênero
-   - tagline: frase curta que aparece no card e no topo da página do gênero
-   ============================================================ */
-const genres = [
-  { id: "goth",         label: "Goth",          symbol: "✝", tagline: "cruzes, renda preta e veludo" },
-  { id: "pastel-goth",  label: "Pastel Goth",   symbol: "✦", tagline: "caveiras e laços em tons pastel" },
-  { id: "cybergoth",    label: "Cybergoth",     symbol: "ᛉ", tagline: "led, correntes e plástico industrial" },
-  { id: "punk",         label: "Punk",          symbol: "☠", tagline: "spikes, correntes e couro" },
-  { id: "cyberpunk",    label: "Cyberpunk",     symbol: "⌁", tagline: "led neon, vinil e recortes futuristas" },
-  { id: "guro-kawaii",  label: "Guro-Kawaii",   symbol: "血", tagline: "personagens fofos com toque sangrento" },
-  { id: "yami-kawaii",  label: "Yami-Kawaii",   symbol: "♱", tagline: "curativos, seringas e rosa doentio" },
-  { id: "cyber-kawaii", label: "Cyber-Kawaii",  symbol: "◈", tagline: "holográfico, pixel art e plástico fofo" },
-  { id: "electronics",  label: "Electronics",   symbol: "⌨", tagline: "periféricos fora do padrão gamer" }
-];
-
-/* ============================================================
-   EDITE SEUS PRODUTOS AQUI
-   - genre: precisa ser um dos ids da lista "genres" acima
-   - category: tipo de item (moda, acessórios, periférico...) — usado no sub-filtro dentro do gênero
-   - article: "na" ou "no", conforme a loja
-   - image: link da foto (ou "imagens/nome-do-arquivo.png" se você hospedou no GitHub)
-   - link: seu link de afiliado real
-   - porque: (opcional) uma linha, escrita por você, dizendo por que esse item entrou.
-     Aparece no card. Deixe "" pra não mostrar nada.
-     Atenção: não use aspas duplas (") dentro do texto, só aspas simples (') ou curvas (“ ”),
-     senão o site inteiro quebra.
-   ============================================================ */
 const products = [
   // ---- MOLETOMS ----
   {
@@ -820,373 +207,937 @@ const products = [
     article: "na",
     image: "https://down-br.img.susercontent.com/file/br-11134207-7r98o-m7jug4nk3gs2c3.webp",
     link: "https://s.shopee.com.br/8V7Ww3R4UQ"
+  },
+
+  // ---- NOVOS PRODUTOS ----
+  {
+    title: "Moletom Canguru com Capuz Unissex Lucy Cyberpunk Edgerunners Anime",
+    price: "R$ 69,93",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/br-11134207-7r98o-mdkgm4dt103db1",
+    link: "https://s.shopee.com.br/7puAe79Khe"
+  },
+  {
+    title: "Vestido De Espartilho Para Mulher Gótico Com Conjunto De Saia Curta Roupa De Halloween Renissance",
+    price: "R$ 154,77",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/cn-11134207-7r98o-lyys0psvl3fm1e",
+    link: "https://s.shopee.com.br/40hNCIUJAM"
+  },
+  {
+    title: "Cinto corrente Feminino Multicamadas Punk Gótico Sol Cintura Corrente Cintos De Metal Para Mulheres Vestido Jóias",
+    price: "R$ 19,99",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/sg-11134201-7ra31-mb8gw72e3j4gdf",
+    link: "https://s.shopee.com.br/4VdKz7NTjL"
+  },
+  {
+    title: " Headpiece , Bruxa Tema Videira Design Coroa Elfo , Vestido Acessório De Casamento Bandana Gótica",
+    price: "R$ 15,95",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/sg-11134201-825aj-msq9cw9cypze42",
+    link: "https://s.shopee.com.br/3LRNayRv68"
+  },
+  {
+    title: "Moletom Oversized Y2K Gótico Masculino Feminino Zipado C/ Capuz Estampa Dark Streetwear Harajuku Preto",
+    price: "R$ 79,90",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/br-11134207-820lm-mnyjkeefxce9f3",
+    link: "https://s.shopee.com.br/6L4zAUGMWu"
+  },
+  {
+    title: "Colar Gótico Cruz Vintage Crucifixo Barroco Antigo Retrô Prata Envelhecida",
+    price: "R$ 14,90",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/br-11134207-820m6-msc5rj8wqg3r2e",
+    link: "https://s.shopee.com.br/3VknnHR50R"
+  },
+  {
+    title: "Coturno Rock Punk Gotico Estilo Fivela Sola Alta Tratorada",
+    price: "R$ 199,90",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/br-11134201-23020-st085sxeqjnv0c",
+    link: "https://s.shopee.com.br/4VdKz7RjzP"
+  },
+  {
+    title: "Japonês Y2k Saia Xadrez Bonito Babados Punk Rock Subcultura Bolo Saias Estilo Preppy Casual Novo Femininas",
+    price: "R$ 29,61",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/sg-11134201-824gk-mpqapospevij67",
+    link: "https://s.shopee.com.br/30oXCMXS40"
+  },
+  {
+    title: "X-LARANJA renda bolo escuro Punk inchado saia cultura asiática y2k saia xadrez verão novo estilo roupas femininas casuai",
+    price: "R$ 100,96",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/sg-11134201-824ic-mf5etd1owmx7ac",
+    link: "https://s.shopee.com.br/3B7xOfWoj3"
+  },
+  {
+    title: "Kawaii Kuromis Melodias Gótico Estilo Escuro Chaveiro Acessórios Casal Dos Desenhos Animados Acrílico Pingente Mochila D",
+    price: "R$ 13,50",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/sg-11134201-825a6-mgc15ix0ke1731",
+    link: "https://s.shopee.com.br/20w00WfjA7"
+  },
+  {
+    title: "Versão De Metal Em Aço Inoxidável Cadeia Dupla Cruz Brincos / Punk Gótico Estilo Rodada Piercing Do Parafuso Prisioneiro Da Orelha / Mulheres Homens Ear Clipe Jóias Rocha s",
+    price: "R$ 10,99",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/9a233ac56095d10ef79451b18c85f6c0",
+    link: "https://s.shopee.com.br/3qNeBthXzR"
+  },
+  {
+    title: "Chaveiro De Gato Enrolado SCOFIE , Gótico De Halloween Acrílico , Estilo Escuro Y2K Ornamentos Pingente De Gatinho",
+    price: "R$ 10,44",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/sg-11134201-825ar-mscm68z1qm80b7",
+    link: "https://s.shopee.com.br/3VkpF4dtcD"
+  },
+  {
+    title: "Bolsa Ita Bag Feminina Y2K Estrela Transparente DIY Bolsa Ombro e Transversal Kawaii Lolita Moda",
+    price: "R$ 62,99",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/br-11134207-820mh-mnse79i9hkp05a",
+    link: "https://s.shopee.com.br/6AlYyBYWiS"
+  },
+  {
+    title: "Bolsa De Ombro UUMIR Lolita , Ita Japonesa De Grande Capacidade Y2K , Linda Transparente Feminina",
+    price: "R$ 80,12",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/sg-11134201-820mr-mo2ebvgtglxf95",
+    link: "https://s.shopee.com.br/AKb9NdI945"
+  },
+  {
+    title: "🔥Envio em 24 horas🔥 Brincos de cruz acessórios em estilo gótico simples modernos e versáteis",
+    price: "R$ 12,82",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/sg-11134202-7rdwl-mdljw7oe4r6s7f",
+    link: "https://s.shopee.com.br/1BMuSmvZvD"
+  },
+  {
+    title: "Boneca De Pelúcia Alienígena-Brinquedo De Descompressão Estilo Horror Fofo Para Diversão",
+    price: "R$ 65,70",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/sg-11134201-825b0-mrtj14uwjxfl6f",
+    link: "https://s.shopee.com.br/2gBlTKfiIA"
+  },
+  {
+    title: "Colar Cruz Banhado Prata Y2K Gótico Baddie Masculino Feminino Religioso Crucifixo Presente Aesthetic",
+    price: "R$ 16,99",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/br-11134207-820la-moe8yc7crpxi73",
+    link: "https://s.shopee.com.br/9KigyR6HRw"
+  },
+  {
+    title: "Nova Moda Gótico Cruz Gótica Pingente Brinco De Gancho Para Mulher Brincos De Cristal Punk Jóias Presentes",
+    price: "R$ 10,00",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/sg-11134201-7qvfp-lh3dqlr43cnue5",
+    link: "https://s.shopee.com.br/8V9ZyuR3Ev"
+  },
+  {
+    title: "Chaveiro De Gato Enrolado , Gótico Plano Acrílico 2D , Enfeites Estilo Escuro Pingente De Bolsa De Halloween",
+    price: "R$ 10,16",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/sg-11134201-8259m-msvpp225h4w429",
+    link: "https://s.shopee.com.br/AKbFh0NOqi"
+  },
+  {
+    title: "Menina quente costura Irregular saia xadrez Design feminino estilo Punk Rock Street Streamer saia de comprimento médio",
+    price: "R$ 112,58",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/sg-11134201-825b7-mr5oan8q6hhgbb",
+    link: "https://s.shopee.com.br/40hDlfh89q"
+  },
+  {
+    title: "Bota Coturno Feminina Salto Alto Grosso Plataforma Tratorada Estilo Rock Gótico Zíper Lateral",
+    price: "R$ 119,99",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/br-11134207-820lt-mmsxhppq6sjk6d",
+    link: "https://s.shopee.com.br/8V9exai4OX"
+  },
+  {
+    title: "Conjunto de vestido e shorts retrô estético japonês Y2A para mulheres, vestido-camisa de manga longa estilo gótico Lolit",
+    price: "R$ 105,85",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/sg-11134201-824g1-mpv1jk8cfyf4ae",
+    link: "https://s.shopee.com.br/70KvfutpWh"
+  },
+  {
+    title: "Chy-Y2K Mini Vestido Gótico Feminino Vintage De Cintura Com Laço E Manga Bufante",
+    price: "R$ 85,03",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/c621e12cca015ef6d7750e3ae02f700d",
+    link: "https://s.shopee.com.br/3Vl3VU79d2"
+  },
+  {
+    title: "Unhas Postiças Gringas -PRESS ON NAILS- unhas maximalistas - Y2K - GÓTICAS - NAIL ART - ENVIO DO BRASIL SUPER RÁPIDO",
+    price: "R$ 20,00",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/br-11134201-820lw-mtl4c6jpyqkj4f",
+    link: "https://s.shopee.com.br/60SP8ldLjW"
+  },
+  {
+    title: "Kit Pixel Art Fuse Beads 2,6mm 24/48/72/96 Cores + Mini Ferro + Caneta + Pegboard + Acessórios DIY",
+    price: "R$ 187,69",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/sg-11134201-825bc-msm5639lsm4n56",
+    link: "https://s.shopee.com.br/5AtI9EpBTF"
+  },
+  {
+    title: "Jaqueta Moletom Y2K Gótico Zíper  Frio Cyberpunk Alta Qualidade Lançamento Promoção",
+    price: "R$ 78,90",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/br-11134207-820lm-mqqh6m5hr18hab",
+    link: "https://s.shopee.com.br/9V2HJCH1H0"
+  },
+  {
+    title: "Luvas De Dança Renda Longa Sem Dedos Meia Dedo Fishnet",
+    price: "R$ 13,43",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/sg-11134201-8258h-msrb0shremf6c6",
+    link: "https://s.shopee.com.br/8AWtikV23O"
+  },
+  {
+    title: "Cartela Adesivos de Unha Prata Gótico Alternativo Y2K Gato Místico Zodiaco Nail Art",
+    price: "R$ 11,99",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/br-11134207-81ztu-mknj15wj5mgz59",
+    link: "https://s.shopee.com.br/6VOfjgbRib"
+  },
+  {
+    title: "Lovito Botas Casuais Coreanas De Plataforma Retrô Para Todas As Estações Pretas Para Mulheres LFA86075",
+    price: "R$ 99,23",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/sg-11134201-8259i-mqlh64k3u9sbee",
+    link: "https://s.shopee.com.br/AKbOIjMe8L"
+  },
+  {
+    title: "Calças de trabalho masculinas táticas pretas finas de alta qualidade, calças esportivas do exército à prova d'água",
+    price: "R$ 88,98",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/sg-11134201-7repg-m2b4ydir5vp248",
+    link: "https://s.shopee.com.br/5VW8XqWJgC"
+  },
+  {
+    title: "Moletom Canguru Anjo Cyberpunk Gótico Cyber Tribal Frente E Verso Dark Art Blusa De Frio Alternativo",
+    price: "R$ 75,45",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/sg-11134201-8262k-mjf3tz4b1kau6d",
+    link: "https://s.shopee.com.br/9Kir6tHebz"
+  },
+  {
+    title: "Bolsa De Ombro Uniforme JUNYUE JK , Lolita PU Transparente Ita Crossbody De PVC Estilo Japonês Harajuku Y2K",
+    price: "R$ 45,63",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/sg-11134201-822xe-mo9kc77z8kct70",
+    link: "https://s.shopee.com.br/AKbOIjRBRR"
+  },
+  {
+    title: "Moletom Blusa Cyberpunk 2077 Jogo RPG",
+    price: "R$ 59,33",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/br-11134201-23020-525eq4h15rnvd0",
+    link: "https://s.shopee.com.br/AKbOIjDqaD"
+  },
+  {
+    title: "Casaco Moletom  Zíper Chamas Cyberpunk Grunge Y2K Streetwear Masculino Feminino",
+    price: "R$ 78,90",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/br-11134207-820m2-mqc3tcwkgrnmbc",
+    link: "https://s.shopee.com.br/AUuoV2DDFE"
+  },
+  {
+    title: "DION1UE Bolsa Ita Transparente , De Ombro Uniforme Y2K PU JK , Lolita Zipper Harajuku PVC Crossbody Bag Diariamente",
+    price: "R$ 42,85",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/sg-11134201-8259d-mqa08h7or6z181",
+    link: "https://s.shopee.com.br/AAHy6QRomQ"
+  },
+  {
+    title: "Crianças Branco Nupcial Casamento Princesa Renda Elástica Fishnet Luvas Sem Dedos Com Arco Para Meninas De Flores",
+    price: "R$ 11,69",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/sg-11134201-825ag-mrnubqkibz0mea",
+    link: "https://s.shopee.com.br/9060iHRrMb"
+  },
+  {
+    title: "Bota Over The Knee Feminina Preta Salto Alto Grosso Plataforma Design Elegante Contemporâneo",
+    price: "R$ 99,33",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/sg-11134201-823pd-mori761c3rwv10",
+    link: "https://s.shopee.com.br/8V9k7MTcr2"
+  },
+  {
+    title: "Bota Coturno Feminina com Bolsa Transversal Preta Alça Dourada Salto Bloco Plataforma",
+    price: "R$ 117,90",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/br-11134207-7qukw-lim13ml62bow01",
+    link: "https://s.shopee.com.br/9zyXu7NuoJ"
+  },
+  {
+    title: "Fone De Ouvido Orelha De Gato Gatinho Cat Bluetooth Ear Com Led Rgb Headphone",
+    price: "R$ 25,99",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/br-11134207-7r98o-m1hq6wzm7e8h43",
+    link: "https://s.shopee.com.br/7fad7pbP8W"
+  },
+  {
+    title: "Teclado Mecânico Gamer Titorion 60% Teclado Preto Computador ABNT2 Hot Swap RGB Switch Red Brown USB LED Titorion",
+    price: "R$ 159,90",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/br-11134207-820lh-mt6ul6vosop203",
+    link: "https://s.shopee.com.br/4fx3zWEZQi"
+  },
+  {
+    title: "MousePad Speed Gamer Antiderrapante Bordas Costuradas Confortavel Liso Sem Relevos Com Estampa Dark Red Varios Tamanhos",
+    price: "R$ 18,90",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/br-11134207-81ztc-mk1axdcgijnn31",
+    link: "https://s.shopee.com.br/90639U2Xh1"
+  },
+  {
+    title: "Minimalista preto vermelho grande personagem quadrinhos keycap PBT sublimação de cinco lados Original fábrica keycap com",
+    price: "R$ 174,17",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/sg-11134201-820nv-mng7ny6sklxd83",
+    link: "https://s.shopee.com.br/7VHFMj3qxn"
+  },
+  {
+    title: "Mousepad Gamer 80x30 Antiderrapante Gengar Dark Phantom Black Vaporwave Anime PKM Evoluçao - SUBLIMA",
+    price: "R$ 29,99",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/br-11134207-820lg-moe36z69jf2d0d",
+    link: "https://s.shopee.com.br/9APTLn1uM2"
+  },
+  {
+    title: "Blusa Preta Blusa Gótica Renda Tule",
+    price: "R$ 15,00",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/br-11134207-820lm-mt5wgef3ncw673",
+    link: "https://s.shopee.com.br/7VHFMjLabg"
+  },
+  {
+    title: "Cropped Top Lilás Veludo com Renda Preta – Blusa Gótica Moda Alternativa Rock Egirl",
+    price: "R$ 179,99",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/br-11134207-820l7-mnnazdumeltt64",
+    link: "https://s.shopee.com.br/5fpbBMSZKJ"
+  },
+  {
+    title: "Meia Calça 7/8 Halloween Esqueleto Com Rosa Meia Estampa Caveira Ossos Cosplay Viuva Negra",
+    price: "R$ 32,46",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/sg-11134201-22100-y0exvsjjetive7",
+    link: "https://s.shopee.com.br/30orcZYeVc"
+  },
+  {
+    title: "Moda Vintage Chama Cruz Pingente Colar Longa Corrente Jóias Góticas Para Homens Mulheres",
+    price: "R$ 4,07",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/sg-11134301-7rcck-m68sdnpdcvi1d4",
+    link: "https://s.shopee.com.br/9fLlYowDAJ"
+  },
+  {
+    title: "Vintage Gótico Cruz Pingente Titânio Aço Colar Padrão Étnico Design Masculino De Inoxidável",
+    price: "R$ 10,00",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/sg-11134201-81zus-mmxaqvnwc9ol54",
+    link: "https://s.shopee.com.br/AAI29juJ9Q"
+  },
+  {
+    title: "Conjunto De Anel De Prata Com Garra De Caveira Vintage Hip Hop Joias Exclusivas De Declaração De Metal Para Amantes Da M",
+    price: "R$ 18,04",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/sg-11134301-7rd51-m6z8aocxc2r61c",
+    link: "https://s.shopee.com.br/3LRi1BOeTh"
+  },
+  {
+    title: "Corset Cinto Corpete Corselet Espartilho Elástico Couro Pu Gótico Vintage Argolas Metálico",
+    price: "R$ 32,97",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/br-11134207-81ztc-mkfannut651dce",
+    link: "https://s.shopee.com.br/4VdfPK6wYX"
+  },
+  {
+    title: "Saia europeia e americana de estilo gótico feminino saia preta preta escura saia longa jacquard subcultural saia de rabo",
+    price: "R$ 97,69",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/sg-11134201-821fo-mh7xsbaqyhotc2",
+    link: "https://s.shopee.com.br/BUgFMRq70"
+  },
+  {
+    title: "Gargantilha De Veludo Preto Para Mulheres , Vintage , Faixa Larga , Joias Minimalistas Da Moda",
+    price: "R$ 4,10",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/sg-11134301-7ra0j-mb9pj5mqsu3576",
+    link: "https://s.shopee.com.br/3Vl8DUO5QD"
+  },
+  {
+    title: "Saia europeia e americana de estilo gótico feminino saia preta preta escura saia longa jacquard subcultural de rabo",
+    price: "R$ 109,61",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/sg-11134201-7rep2-m2zn39lq18z167",
+    link: "https://s.shopee.com.br/Lo6RfRCm1"
+  },
+  {
+    title: "Moletom Blusa de Frio Premium Flanelado Canguru Gótico Kuromi Mangas Streetwear Unissex",
+    price: "R$ 59,94",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/sg-11134201-824i9-mq184w8nagb149",
+    link: "https://s.shopee.com.br/9zybxR3fn7"
+  },
+  {
+    title: "Moletom Canguru Algodão Adulto e Infantil Unissex Kuromi So Cool Cute Little Devil Lançamento",
+    price: "R$ 51,99",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/sg-11134201-825zv-ml3fy4hqmhhe65",
+    link: "https://s.shopee.com.br/AAI29k32S8"
+  },
+  {
+    title: "Nova Corrente de Calças em Metal Dupla Camada Retro Gótico - Corrente Ajustável de Punk em Aço Inoxidável para Hip",
+    price: "R$ 19,54",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/sg-11134201-823qg-mp4lx1ybffnxd1",
+    link: "https://s.shopee.com.br/7AeSMrOKrj"
+  },
+  {
+    title: "Grampo De Cabelo Com Laço De Veludo Preto Vintage – Garra De Primavera Elegante Para Updos Femininos E Penteados Chiques",
+    price: "R$ 9,97",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/sg-11134201-7ratz-maidreswd4s607",
+    link: "https://s.shopee.com.br/8pmgLv0OLa"
+  },
+  {
+    title: "Presilha e Laço Preto com Redinha Para Cabelo Rede para coque",
+    price: "R$ 9,98",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/sg-11134201-81zwn-mil0qvn95wckd7",
+    link: "https://s.shopee.com.br/9066YDzl0b"
+  },
+  {
+    title: "Novo Metal combinação de três camadas Retro Punk hip-hop calças corrente calças decorativas corrente senhoras estrela ci",
+    price: "R$ 10,48",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/sg-11134301-7ra2f-m548jx0oo0vf39",
+    link: "https://s.shopee.com.br/70L2AYOyCg"
+  },
+  {
+    title: "Chaveiro Coelho Gótico de Pelúcia Kawaii | Dark Bunny Halloween | Pingente para Bolsa Mochila Carro Rei Fantasma",
+    price: "R$ 77,51",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/br-11134207-820mh-mr20qucggpacbe",
+    link: "https://s.shopee.com.br/5q94mPGLk8"
+  },
+  {
+    title: "Kit Tiara e Luva Pata de Gatinho Preto Branco Cosplay Fantasia Orelha de Gato Par de Luvas Gatinho",
+    price: "R$ 69,90",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/br-11134207-7r98o-lp446vulh2nm7f",
+    link: "https://s.shopee.com.br/8AWzYh38V9"
+  },
+  {
+    title: "Óculos De Sol Y2k Hype Cyberpunk Oval Trap Futurista Cor Preto Desenho Liso",
+    price: "R$ 29,90",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/sg-11134201-8259c-mqnibb8y1iww2f",
+    link: "https://s.shopee.com.br/40hS54S7TS"
+  },
+  {
+    title: "Bota Coturno Preta Feminina Plataforma Tratorada Moderna e Confortável",
+    price: "R$ 55,99",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/br-11134207-820ld-mso5hnfr6nlxc4",
+    link: "https://s.shopee.com.br/8KqRF2G5jT"
+  },
+  {
+    title: "[Haven Living] Punk Rebite Prata Cone Spikes Screwback Studs Artesanato Rebites Frescos Bolsa De Roupas Sapato Cinto De ",
+    price: "R$ 13,09",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/sg-11134201-8261c-mjgxrj7h1af888",
+    link: "https://s.shopee.com.br/6VOn3fA0bl"
+  },
+  {
+    title: "Bota Feminina Moleca Salto Alto Grosso Preta Coturno Plataforma Super Confortável",
+    price: "R$ 149,90",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/sg-11134201-822xk-moe744hoawowa6",
+    link: "https://s.shopee.com.br/AAI5QP970q"
+  },
+  {
+    title: "Stylish Long Black Fishnet Gloves Womens Fingerless Gloves Girls Dance Gothic Punk Rock Costume Fancy Gloves Goth Lolita",
+    price: "R$ 7,97",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/4820731f3d10bcd2a2e1fdf254f0bd6d",
+    link: "https://s.shopee.com.br/gR06wjD1x"
+  },
+  {
+    title: "Bolsa Feminina de Ombro Branca Verniz Holográfica Pequena Baguete Y2K Casual Moderna",
+    price: "R$ 17,94",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/br-11134207-820la-mt5x5i1nkf0nf0",
+    link: "https://s.shopee.com.br/6VOn3fROxt"
+  },
+  {
+    title: "ALLGOODS1 Itabag Transparente , Bolsa De Ombro Japonesa Y2k JK Crossbody Harajuku Lolita",
+    price: "R$ 44,28",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/sg-11134201-82632-mlkv2wemauq0c1",
+    link: "https://s.shopee.com.br/60SWSkXqHm"
+  },
+  {
+    title: "Calça Tática Cargo Militar Preta + Cinto Tático Nylon Fivela Rápida Agente Segurança Vigilante Trabalho Outdoor",
+    price: "R$ 95,99",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/sg-11134201-8259h-mthxe2vo90qvd8",
+    link: "https://s.shopee.com.br/3VlBU9PlGH"
+  },
+  {
+    title: "Y2K Ita Bolsa Transparente Janela Pin Display Kpop Photocard Titular Bowknot Underarm Bag Crossbody Hobo",
+    price: "R$ 55,48",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/sg-11134201-81zwh-mmiony94rx1dbd",
+    link: "https://s.shopee.com.br/6Alwf3XCwp"
+  },
+  {
+    title: "3D Ouro Prata Estrela Design Adesivos De Arte Do Prego Y2K Pentagrama De Metal Holográfico Auto-Adesivo Sliders DIY Manicure Decoração Dicas",
+    price: "R$ 7,63",
+    category: "?",
+    genre: "?",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/sg-11134201-7rdwc-m17yepzsmcibd4",
+    link: "https://s.shopee.com.br/6Alwf3Sfdr"
+  },
+  {
+    title: "Kit Miçangas Beads 2,6mm 120 Cores 14.000 Unidades + Acessórios para Pixel Art DIY e Artesanato",
+    price: "R$ 73,99",
+    category: "?",
+    genre: "?",
+    porque: "",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/br-11134207-820mc-mrrvnj2xcohyf5",
+    link: "https://s.shopee.com.br/7puBEtL0K0"
+  },
+  {
+    title: "Mouse Pad Gamer Caveira Cyborg Dark Red 65x30cm 80x40cm 90x50cm 120x60cm Borda Costurada",
+    price: "R$ 24,95",
+    category: "?",
+    genre: "?",
+    porque: "",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/sg-11134201-8260j-mlxjnorxc9hcd8",
+    link: "https://s.shopee.com.br/80DbRCTAWL"
+  },
+  {
+    title: "Chave de direção translúcida Mahjong Keycap translúcido [quatro peças preto vermelho duas cores opcionais]",
+    price: "R$ 57,10",
+    category: "?",
+    genre: "?",
+    porque: "",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/sg-11134201-825a7-mty369h8joqw6b",
+    link: "https://s.shopee.com.br/1LgiVdkARo"
+  },
+  {
+    title: "Mousepad Gamer 80x30cm Borda Costurada, Antiderrapante, Superfície Suave, Design Dark Anime para PC Gamer",
+    price: "R$ 39,90",
+    category: "?",
+    genre: "?",
+    porque: "",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/sg-11134201-825am-mtatqswl730i43",
+    link: "https://s.shopee.com.br/40hTgXeU2D"
+  },
+  {
+    title: "Mouse Pad Gamer Speed Confortavel Bordas Costuradas Antiderrpante Com Estanpa Dark Dragon Varios Tamanhos",
+    price: "R$ 18,90",
+    category: "?",
+    genre: "?",
+    porque: "",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/br-11134207-81ztc-mjzgr0vusum861",
+    link: "https://s.shopee.com.br/4B0tsqdqhE"
+  },
+  {
+    title: "Fones de ouvido com orelha de gato com LED sem fio Bluetooth para gatinhos",
+    price: "R$ 24,99",
+    category: "?",
+    genre: "?",
+    porque: "",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/br-11134207-81z1k-mgp8oezenrb49b",
+    link: "https://s.shopee.com.br/4LKK59Q12D"
+  },
+  {
+    title: "Teclado Mecanico Mancer Ghoul MK3, RGB, ABNT2, Switch Huano Vermelho, Preto, MCR-GHM3-RGB01RD",
+    price: "R$ 161,71",
+    category: "?",
+    genre: "?",
+    porque: "",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/sg-11134201-7renr-m8dmyyovx193fe",
+    link: "https://s.shopee.com.br/1gJYuFeZFQ"
+  },
+  {
+    title: "Capa Para Airpods 5 4 Pro 3 2 1 Bonito 3D Kuromi Rosa Bowknot Decoração Soft TPU Preto De Fone De Ouvido À Prova De Choq",
+    price: "R$ 12,15",
+    category: "?",
+    genre: "?",
+    porque: "",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/sg-11134201-7rbmu-loqnzabcmiu54a",
+    link: "https://s.shopee.com.br/4VdjGlgYsU"
+  },
+  {
+    title: "MY Anéis Masculinos Punk Góticos Caveira Prata Preto Legais Acessórios Joias",
+    price: "R$ 13,04",
+    category: "?",
+    genre: "?",
+    porque: "",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/sg-11134201-7rdx6-mbrlzdzoi5k7b7",
+    link: "https://s.shopee.com.br/2LZHIGs1Ph"
+  },
+  {
+    title: "Blusa Preta Renda Gótica / Tamanho 42 / Brechó",
+    price: "R$ 45,00",
+    category: "?",
+    genre: "?",
+    porque: "",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/br-11134207-7r98o-m6mru9xp2y40fb",
+    link: "https://s.shopee.com.br/5q99ShN6DS"
+  },
+  {
+    title: "Colar Com Pingente De Cruz Estilo Y2k Escuro Gótico – Design Moderno De Detalhes Intricos",
+    price: "R$ 13,99",
+    category: "?",
+    genre: "?",
+    porque: "",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/br-11134207-820mh-mti955zbxvcz6c",
+    link: "https://s.shopee.com.br/1Lgk6QnEjL"
+  },
+  {
+    title: "[Item de Venda Quente] Novo Moletom Gótico Kuromi Unissex",
+    price: "R$ 48,60",
+    category: "?",
+    genre: "?",
+    porque: "",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/sg-11134201-7rau6-ma1n2t7wtmkvf0",
+    link: "https://s.shopee.com.br/1BNJu7wSqO"
+  },
+  {
+    title: "Vestido Feminino Gótico Espartilho Plus Size Overbust Vestidos Para Mulheres Fora Do Ombro Manga Comprida De Casamento R",
+    price: "R$ 229,89",
+    category: "?",
+    genre: "?",
+    porque: "",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/cn-11134207-820l4-mohyelh2qscs26",
+    link: "https://s.shopee.com.br/20wQtebpUl"
+  },
+  {
+    title: "Kit 3 Corsets Espartilho Feminino Gótico Couro Ecológico  com Cadarço Argolas  Corações Alternativo",
+    price: "R$ 35,98",
+    category: "?",
+    genre: "?",
+    porque: "",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/br-11134207-7r98o-mabf93cxbfzqea",
+    link: "https://s.shopee.com.br/4B0vTdXuct"
+  },
+  {
+    title: "Camiseta War Devil Harajuku Pastel Kawaii Goth Gotic Anime Otaku",
+    price: "R$ 30,02",
+    category: "?",
+    genre: "?",
+    porque: "",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/br-11134207-7r98o-ma1fn1orcflu83",
+    link: "https://s.shopee.com.br/7fane4XvNp"
+  },
+  {
+    title: "Moletom Blusa de Frio Premium Canguru Capuz Kuromi My Melody Gótico Unissex Aesthetic",
+    price: "R$ 55,95",
+    category: "?",
+    genre: "?",
+    porque: "",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/br-11134207-820lo-mughrmh32yv533",
+    link: "https://s.shopee.com.br/AUuz1HMvuB"
+  },
+  {
+    title: "Organizador de Maquiagem Corset Gotico Veneziano Porta Pinceis Canetas Batons Decoracao Elegante Premium Luxo",
+    price: "R$ 26,58",
+    category: "?",
+    genre: "?",
+    porque: "",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/br-11134207-820lt-mt7bljui49omeb",
+    link: "https://s.shopee.com.br/50a2TAUjw4"
+  },
+  {
+    title: "Blusa Cropped Gótica Vintage em Renda Preta – Estilo Y2K Alternativo com Amarração Frontal",
+    price: "R$ 64,90",
+    category: "?",
+    genre: "?",
+    porque: "",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/br-11134207-820m5-mnpuopuyrvup47",
+    link: "https://s.shopee.com.br/5VWJ45OMtM"
+  },
+  {
+    title: "Par de Laços Infantil Luxo Preto e Branco Presilha Bico De  Pato Menina Elegante Acessórios kids",
+    price: "R$ 29,90",
+    category: "?",
+    genre: "?",
+    porque: "",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/br-11134207-820ly-mosijrrkknibcb",
+    link: "https://s.shopee.com.br/3LRq4jdiz4"
+  },
+  {
+    title: "Laço Grande Feminino para Cabelo com Presilha Bico de Pato Vermelho Preto Branco",
+    price: "R$ 12,99",
+    category: "?",
+    genre: "?",
+    porque: "",
+    store: "Shopee",
+    article: "na",
+    image: "https://cf.shopee.com.br/file/br-11134207-820l7-mlocvm36lcef75",
+    link: "https://s.shopee.com.br/3VlGH2d5e7"
   }
 ];
-
-/* ============================================================
-   MOTOR DO SITE — não precisa mexer daqui pra baixo
-   ============================================================ */
-
-// ticker: gera a faixa animada com os nomes dos gêneros
-(function buildTicker(){
-  const track = document.getElementById('ticker-track');
-  const names = genres.map(g => g.label.toUpperCase()).join(' ');
-  track.innerHTML = (names + ' ◇ ').repeat(1).split(' ').map(w => `<span>${w}</span>`).join('') +
-                     (names + ' ◇ ').repeat(1).split(' ').map(w => `<span>${w}</span>`).join('');
-})();
-
-function genreById(id){ return genres.find(g => g.id === id); }
-
-function escapeHtml(str){
-  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-}
-
-// tira acento e caixa alta, pra "calca" achar "Calça"
-function normalizar(str){
-  return String(str).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-}
-
-function textoDeBusca(p){
-  const g = genreById(p.genre);
-  return normalizar([p.title, p.porque || '', p.category, p.store, g ? g.label : ''].join(' '));
-}
-
-// o item bate se contiver TODAS as palavras digitadas (em qualquer ordem)
-function bate(p, consulta){
-  const termos = normalizar(consulta).split(/\s+/).filter(Boolean);
-  if(!termos.length) return true;
-  const texto = textoDeBusca(p);
-  return termos.every(t => texto.includes(t));
-}
-
-// termo digitado na busca da home, levado pra tela "Ver tudo"
-let consultaPendente = '';
-
-// lê um preço tipo "R$ 76,62" ou "R$ 1.234,56" e devolve o número (76.62).
-// se o preço não tiver valor numérico (ex: "Ver preço no site"), devolve null.
-function parsePrice(str){
-  const match = str.match(/([\d.]+),(\d{2})/);
-  if(!match) return null;
-  return parseFloat(match[1].replace(/\./g, '') + '.' + match[2]);
-}
-
-function priceBand(p){
-  const val = parsePrice(p.price);
-  if(val === null) return null;
-  return val <= 50 ? 'ate50' : 'mais50';
-}
-
-function buildGenreGrid(){
-  const el = document.getElementById('genre-grid');
-  el.innerHTML = '';
-
-  // card especial "ver tudo" — sempre em primeiro, pra quem quer navegar sem
-  // escolher um gênero específico primeiro
-  const verTudo = document.createElement('a');
-  verTudo.href = '#tudo';
-  verTudo.className = 'genre-card genre-card--all';
-  verTudo.innerHTML = `
-    <span class="genre-symbol">✧</span>
-    <h3>Ver tudo</h3>
-    <p>o catálogo inteiro, sem escolher estética</p>
-    <span class="count">${products.length} itens</span>
-  `;
-  el.appendChild(verTudo);
-
-  genres.forEach(g => {
-    const count = products.filter(p => p.genre === g.id).length;
-    const card = document.createElement('a');
-    card.href = '#' + g.id;
-    card.className = 'genre-card';
-    card.innerHTML = `
-      <span class="genre-symbol">${g.symbol}</span>
-      <h3>${g.label}</h3>
-      <p>${g.tagline}</p>
-      <span class="count">${count} ${count === 1 ? 'item' : 'itens'}</span>
-    `;
-    el.appendChild(card);
-  });
-}
-
-function sealText(){ return 'curadoria<br>nana.rip'; }
-
-// pega as fotos do produto: usa p.images (array) se existir, senão cai pra p.image (foto única)
-function fotosDoProuto(p){
-  if(Array.isArray(p.images) && p.images.length) return p.images;
-  return [p.image];
-}
-
-// em telas de toque não há hover: o selo "carimba" quando o card entra na tela
-const ehToque = !!(window.matchMedia && window.matchMedia('(hover: none)').matches);
-const observadorSelo = (ehToque && 'IntersectionObserver' in window)
-  ? new IntersectionObserver((entradas) => {
-      entradas.forEach(en => {
-        if(en.isIntersecting){
-          en.target.classList.add('in-view');
-          observadorSelo.unobserve(en.target);
-        }
-      });
-    }, { threshold: 0.6 })
-  : null;
-
-function createCardEl(p){
-  const fotos = fotosDoProuto(p);
-  const temVarias = fotos.length > 1;
-
-  const card = document.createElement('div');
-  card.className = 'card';
-
-  const imgsHtml = fotos.map((src, i) => `<img src="${src}" alt="${p.title}" loading="lazy" class="${i === 0 ? 'is-active' : ''}">`).join('');
-  const dotsHtml = temVarias ? `<div class="carousel-dots">${fotos.map((_, i) => `<span class="${i === 0 ? 'active' : ''}"></span>`).join('')}</div>` : '';
-  const arrowsHtml = temVarias ? `
-    <button type="button" class="carousel-arrow prev" aria-label="Foto anterior">‹</button>
-    <button type="button" class="carousel-arrow next" aria-label="Próxima foto">›</button>
-  ` : '';
-
-  card.innerHTML = `
-    <div class="card-img">
-      <span class="tag">${p.category}</span>
-      <div class="seal"><span>${sealText()}</span></div>
-      <div class="carousel-track">${imgsHtml}</div>
-      ${dotsHtml}
-      ${arrowsHtml}
-    </div>
-    <div class="card-body">
-      <h3>${p.title}</h3>
-      ${p.porque ? `<p class="porque">${escapeHtml(p.porque)}</p>` : ''}
-      <div class="price mono">${p.price}</div>
-      <a class="cta" href="${p.link}" target="_blank" rel="noopener sponsored">ver ${p.article} ${p.store} ↗</a>
-    </div>
-  `;
-
-  card.querySelector('.cta').addEventListener('click', () => {
-    registrar('clique_produto', {
-      produto: p.title, loja: p.store, estetica: p.genre || '', categoria: p.category
-    });
-  });
-
-  if(temVarias){
-    const track = card.querySelector('.carousel-track');
-    const dots = [...card.querySelectorAll('.carousel-dots span')];
-    const imgs = [...card.querySelectorAll('.carousel-track img')];
-
-    function atualizarAtiva(){
-      const idx = Math.round(track.scrollLeft / track.clientWidth);
-      dots.forEach((d, i) => d.classList.toggle('active', i === idx));
-      imgs.forEach((im, i) => im.classList.toggle('is-active', i === idx));
-    }
-
-    let ticking = false;
-    track.addEventListener('scroll', () => {
-      if(ticking) return;
-      ticking = true;
-      requestAnimationFrame(() => { atualizarAtiva(); ticking = false; });
-    });
-
-    card.querySelector('.prev').addEventListener('click', (e) => {
-      e.preventDefault(); e.stopPropagation();
-      track.scrollBy({ left: -track.clientWidth, behavior: 'smooth' });
-    });
-    card.querySelector('.next').addEventListener('click', (e) => {
-      e.preventDefault(); e.stopPropagation();
-      track.scrollBy({ left: track.clientWidth, behavior: 'smooth' });
-    });
-  }
-
-  if(observadorSelo) observadorSelo.observe(card);
-  return card;
-}
-
-function buildFeatured(){
-  const el = document.getElementById('featured-grid');
-  const items = products.filter(p => p.featured);
-  el.innerHTML = '';
-  items.forEach(p => el.appendChild(createCardEl(p)));
-}
-
-function renderProductGrid(list, msgVazia){
-  let grid = document.getElementById('grid');
-  // se a grade foi trocada por uma mensagem de "vazio", restaura uma grade de verdade
-  if(!grid.classList.contains('grid')){
-    const fresh = document.createElement('div');
-    fresh.className = 'grid';
-    fresh.id = 'grid';
-    grid.replaceWith(fresh);
-    grid = fresh;
-  }
-  grid.innerHTML = '';
-  if(list.length === 0){
-    const empty = document.createElement('div');
-    empty.className = 'empty-state';
-    empty.innerHTML = `<span class="glyph">✝</span><p>${msgVazia || 'em breve — a curadoria pra essa estética está a caminho.'}</p>`;
-    grid.replaceWith(empty);
-    empty.id = 'grid';
-    return;
-  }
-  list.forEach(p => grid.appendChild(createCardEl(p)));
-}
-
-function renderItemsView(symbol, titulo, tagline, items){
-  document.getElementById('genre-symbol-big').textContent = symbol;
-  document.getElementById('genre-title').textContent = titulo;
-  document.getElementById('genre-tagline').textContent = tagline;
-
-  const categories = [...new Set(items.map(p => p.category))];
-  const hasPriceInfo = items.some(p => priceBand(p) !== null);
-
-  const filtersEl = document.getElementById('filters');
-  const priceFiltersEl = document.getElementById('price-filters');
-  filtersEl.innerHTML = '';
-  priceFiltersEl.innerHTML = '';
-
-  // garante que sempre existe um <div id="grid" class="grid"> (o empty-state pode ter substituído ele)
-  let gridEl = document.getElementById('grid');
-  if(!gridEl || !gridEl.classList.contains('grid')){
-    const fresh = document.createElement('div');
-    fresh.className = 'grid';
-    fresh.id = 'grid';
-    if(gridEl){ gridEl.replaceWith(fresh); } else { priceFiltersEl.insertAdjacentElement('afterend', fresh); }
-  }
-
-  let activeCategory = 'todos';
-  let activePrice = 'todos';
-  let activeSearch = consultaPendente;
-  consultaPendente = '';
-
-  const searchWrap = document.getElementById('search-wrap');
-  const searchInput = document.getElementById('search-input');
-  searchWrap.classList.toggle('hidden', items.length === 0);
-  searchInput.value = activeSearch;
-
-  function applyFilters(){
-    let list = items;
-    if(activeCategory !== 'todos') list = list.filter(p => p.category === activeCategory);
-    if(activePrice !== 'todos') list = list.filter(p => priceBand(p) === activePrice);
-    if(activeSearch.trim()) list = list.filter(p => bate(p, activeSearch));
-    renderProductGrid(list, items.length ? 'nada encontrado com esses filtros. tente outra palavra ou limpe a busca.' : undefined);
-  }
-
-  let timerBusca;
-  searchInput.oninput = () => {
-    activeSearch = searchInput.value;
-    applyFilters();
-    clearTimeout(timerBusca);
-    timerBusca = setTimeout(() => {
-      if(activeSearch.trim().length >= 3) registrar('search', { search_term: activeSearch.trim() });
-    }, 900);
-  };
-
-  if(categories.length > 1){
-    const allBtn = document.createElement('button');
-    allBtn.className = 'filter-btn active';
-    allBtn.dataset.filter = 'todos';
-    allBtn.textContent = 'todos';
-    filtersEl.appendChild(allBtn);
-    categories.forEach(cat => {
-      const btn = document.createElement('button');
-      btn.className = 'filter-btn';
-      btn.dataset.filter = cat;
-      btn.textContent = cat;
-      filtersEl.appendChild(btn);
-    });
-    filtersEl.onclick = (e) => {
-      if(!e.target.classList.contains('filter-btn')) return;
-      filtersEl.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-      e.target.classList.add('active');
-      activeCategory = e.target.dataset.filter;
-      applyFilters();
-    };
-  }
-
-  if(hasPriceInfo){
-    const priceOptions = [
-      { id: 'todos', label: 'todos os preços' },
-      { id: 'ate50', label: 'até R$ 50' },
-      { id: 'mais50', label: 'R$ 50+' }
-    ];
-    priceOptions.forEach(opt => {
-      const btn = document.createElement('button');
-      btn.className = 'filter-btn' + (opt.id === 'todos' ? ' active' : '');
-      btn.dataset.filter = opt.id;
-      btn.textContent = opt.label;
-      priceFiltersEl.appendChild(btn);
-    });
-    priceFiltersEl.onclick = (e) => {
-      if(!e.target.classList.contains('filter-btn')) return;
-      priceFiltersEl.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-      e.target.classList.add('active');
-      activePrice = e.target.dataset.filter;
-      registrar('filtro_preco', { faixa: activePrice });
-      applyFilters();
-    };
-  }
-
-  applyFilters();
-  if(activeSearch.trim().length >= 3) registrar('search', { search_term: activeSearch.trim() });
-}
-
-function renderGenreView(genreId){
-  const g = genreById(genreId);
-  if(!g){ window.location.hash = ''; return; }
-  renderItemsView(g.symbol, g.label, g.tagline, products.filter(p => p.genre === g.id));
-}
-
-function renderAllView(){
-  renderItemsView('✧', 'Ver tudo', 'o catálogo inteiro, sem escolher estética', products);
-}
-
-function showView(view){
-  document.getElementById('home-view').classList.toggle('hidden', view !== 'home');
-  document.getElementById('genre-view').classList.toggle('hidden', view !== 'genre');
-  document.getElementById('sobre-view').classList.toggle('hidden', view !== 'sobre');
-  document.getElementById('nav-home').classList.toggle('active', view === 'home' || view === 'genre');
-  document.getElementById('nav-sobre').classList.toggle('active', view === 'sobre');
-  window.scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' : 'auto' });
-}
-
-function router(){
-  const hash = window.location.hash.replace('#', '');
-  if(hash === 'sobre'){
-    registrar('ver_sobre');
-    showView('sobre');
-  } else if(hash === 'tudo'){
-    renderAllView();
-    registrar('ver_estetica', { estetica: 'tudo' });
-    showView('genre');
-  } else if(hash && genreById(hash)){
-    renderGenreView(hash);
-    registrar('ver_estetica', { estetica: hash });
-    showView('genre');
-  } else {
-    showView('home');
-  }
-}
-
-document.getElementById('logo-home').addEventListener('click', () => {
-  if(window.location.hash === '' || window.location.hash === '#'){
-    router();
-  } else {
-    window.location.hash = '';
-  }
-});
-
-buildGenreGrid();
-buildFeatured();
-
-// busca da home: leva o termo pra tela "Ver tudo", já filtrada
-document.getElementById('home-search').addEventListener('submit', (e) => {
-  e.preventDefault();
-  const input = document.getElementById('home-search-input');
-  const q = input.value.trim();
-  if(!q) return;
-  consultaPendente = q;
-  input.value = '';
-  if(window.location.hash === '#tudo'){ router(); } else { window.location.hash = 'tudo'; }
-});
-
-window.addEventListener('hashchange', router);
-router();
-</script>
-
-</body>
-</html>
