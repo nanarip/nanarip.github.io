@@ -64,9 +64,11 @@
     cursor:pointer;
     transition:text-shadow 0.35s var(--ease), letter-spacing 0.35s var(--ease);
   }
+  @media (hover:hover) and (pointer:fine){
   .wordmark:hover{
     text-shadow:0 0 18px rgba(255,47,79,0.55);
     letter-spacing:0.09em;
+  }
   }
   .wordmark .cross{ font-size:1.1rem; opacity:0.75; display:inline-block; animation:float 5s ease-in-out infinite; }
   .wordmark .cross:nth-child(3){ animation-delay:1.4s; }
@@ -91,8 +93,13 @@
     background:var(--blood-bright);
     transition:width 0.35s var(--ease);
   }
+  @media (hover:hover) and (pointer:fine){
   nav a:hover{ color:var(--ghost); }
-  nav a:hover::after, nav a.active::after{ width:100%; }
+  }
+  nav a.active::after{ width:100%; }
+  @media (hover:hover) and (pointer:fine){
+  nav a:hover::after{ width:100%; }
+  }
   nav a.active{ color:var(--ghost); }
 
   /* ---------- ticker ---------- */
@@ -164,18 +171,24 @@
     background:radial-gradient(circle at 50% 0%, rgba(195,20,50,0.14), transparent 70%);
     opacity:0; transition:opacity 0.4s var(--ease);
   }
+  @media (hover:hover) and (pointer:fine){
   .genre-card:hover{
     transform:translateY(-7px) scale(1.025);
     border-color:var(--blood);
     box-shadow:0 18px 40px rgba(195,20,50,0.22);
   }
+  }
+  @media (hover:hover) and (pointer:fine){
   .genre-card:hover::before{ opacity:1; }
+  }
   .genre-symbol{
     font-size:1.9rem; color:var(--blood-dim);
     display:block; margin-bottom:14px;
     transition:color 0.4s var(--ease), transform 0.4s var(--ease);
   }
+  @media (hover:hover) and (pointer:fine){
   .genre-card:hover .genre-symbol{ color:var(--blood-bright); transform:scale(1.18) rotate(-4deg); }
+  }
   .genre-card h3{
     font-family:'Cinzel', serif; font-weight:600; font-size:1.15rem;
     color:var(--ghost); letter-spacing:0.03em; margin-bottom:8px;
@@ -193,7 +206,9 @@
     padding:4px 10px; position:relative; z-index:1;
     transition:border-color 0.3s var(--ease), background 0.3s var(--ease);
   }
+  @media (hover:hover) and (pointer:fine){
   .genre-card:hover .count{ border-color:var(--blood-bright); background:rgba(195,20,50,0.12); }
+  }
   .genre-card--all{ border-style:dashed; border-color:var(--blood-dim); }
   .genre-card--all .genre-symbol{ color:var(--blood-bright); }
 
@@ -207,7 +222,9 @@
     letter-spacing:0.1em; text-transform:uppercase; color:var(--muted);
     margin-bottom:26px; transition:color 0.3s var(--ease), transform 0.3s var(--ease);
   }
+  @media (hover:hover) and (pointer:fine){
   .back-link:hover{ color:var(--blood-bright); transform:translateX(-4px); }
+  }
   .genre-header .genre-symbol-big{
     font-size:2.4rem; color:var(--blood-bright); display:block; margin-bottom:10px;
   }
@@ -233,7 +250,9 @@
     background:transparent; color:var(--muted);
     transition:all 0.3s var(--ease);
   }
+  @media (hover:hover) and (pointer:fine){
   .filter-btn:hover{ border-color:var(--blood); color:var(--ghost); transform:translateY(-2px); }
+  }
   .filter-btn.active{ background:var(--blood); border-color:var(--blood); color:var(--ghost); }
 
   /* ---------- grid ---------- */
@@ -253,10 +272,12 @@
     display:flex; flex-direction:column;
     transition:border-color 0.4s var(--ease), transform 0.4s var(--ease), box-shadow 0.4s var(--ease);
   }
+  @media (hover:hover) and (pointer:fine){
   .card:hover{
     border-color:var(--blood-dim);
     transform:translateY(-5px);
     box-shadow:0 16px 36px rgba(0,0,0,0.4);
+  }
   }
 
   .card-img{ position:relative; aspect-ratio:4/3; overflow:hidden; background:#1a1213; }
@@ -276,8 +297,12 @@
     filter:saturate(0.78) contrast(1.12) brightness(0.95);
     transition:transform 0.6s var(--ease), filter 0.6s var(--ease);
   }
+  @media (hover:hover) and (pointer:fine){
   .card:hover .carousel-track img{ filter:saturate(0.95) contrast(1.15) brightness(1); }
+  }
+  @media (hover:hover) and (pointer:fine){
   .card:hover .carousel-track img.is-active{ transform:scale(1.06); }
+  }
 
   .card-img::after{
     content:''; position:absolute; inset:0; pointer-events:none;
@@ -294,9 +319,13 @@
     color:var(--ghost); font-size:0.9rem; z-index:3;
     opacity:0; transition:opacity 0.3s var(--ease), border-color 0.3s var(--ease), background 0.3s var(--ease);
   }
+  @media (hover:hover) and (pointer:fine){
   .carousel-arrow:hover{ border-color:var(--blood-bright); background:rgba(195,20,50,0.5); }
+  }
   .carousel-arrow.prev{ left:10px; } .carousel-arrow.next{ right:10px; }
+  @media (hover:hover) and (pointer:fine){
   .card:hover .carousel-arrow{ opacity:1; }
+  }
 
   .carousel-dots{
     position:absolute; bottom:10px; left:0; right:0; z-index:3;
@@ -319,7 +348,9 @@
     transition:opacity 0.35s var(--ease), transform 0.35s var(--ease);
     z-index:2;
   }
+  @media (hover:hover) and (pointer:fine){
   .card:hover .seal{ opacity:1; transform:scale(1) rotate(0deg); }
+  }
   .seal span{
     font-family:'Cinzel', serif; font-size:0.52rem;
     letter-spacing:0.06em; text-align:center; line-height:1.15;
@@ -341,7 +372,9 @@
     color:var(--ghost); margin-bottom:8px; line-height:1.3;
     transition:color 0.3s var(--ease);
   }
+  @media (hover:hover) and (pointer:fine){
   .card:hover .card-body h3{ color:var(--blood-bright); }
+  }
   .price{ font-family:'Space Mono', monospace; color:var(--blood-bright); font-size:0.95rem; margin-bottom:14px; }
   .cta{
     display:block; text-align:center; margin-top:auto;
@@ -350,7 +383,9 @@
     padding:11px 0; border:1px solid var(--blood-dim); color:var(--muted);
     transition:all 0.3s var(--ease);
   }
+  @media (hover:hover) and (pointer:fine){
   .cta:hover{ background:var(--blood); border-color:var(--blood); color:var(--ghost); transform:scale(1.03); }
+  }
 
   /* ---------- empty state ---------- */
   .empty-state{
@@ -413,7 +448,9 @@
     padding:0 20px; border:1px solid var(--blood); background:transparent; color:var(--blood-bright);
     transition:all 0.3s var(--ease);
   }
+  @media (hover:hover) and (pointer:fine){
   .home-search button:hover{ background:var(--blood); color:var(--ghost); transform:scale(1.04); }
+  }
 
   /* ---------- footer ---------- */
   footer{ border-top:1px solid var(--panel-line); padding:36px 28px; text-align:center; }
@@ -425,6 +462,21 @@
   footer .aviso{
     text-transform:none; letter-spacing:0.02em; line-height:1.7;
     max-width:560px; margin:14px auto 0; font-size:0.74rem;
+  }
+
+  /* ---------- toque (celular e tablet) ---------- */
+  /* Sem mouse não existe "hover": os efeitos acima só valem em telas com mouse.
+     No toque o hover "gruda" depois do dedo, por isso foi separado. */
+  a, button{ -webkit-tap-highlight-color:transparent; }
+  .carousel-track{ overscroll-behavior-x:contain; }
+
+  @media (hover:none){
+    /* o selo carimba uma vez, quando o card aparece na tela (classe aplicada pelo JS) */
+    .card.in-view .seal{ opacity:1; transform:scale(1) rotate(0deg); }
+    /* resposta ao toque: dura só enquanto o dedo está na tela */
+    .genre-card:active{ transform:scale(0.98); border-color:var(--blood); }
+    .cta:active, .home-search button:active{ background:var(--blood); border-color:var(--blood); color:var(--ghost); }
+    .filter-btn:active{ border-color:var(--blood); color:var(--ghost); }
   }
 
   @media (max-width:640px){
@@ -864,6 +916,19 @@ function fotosDoProuto(p){
   return [p.image];
 }
 
+// em telas de toque não há hover: o selo "carimba" quando o card entra na tela
+const ehToque = !!(window.matchMedia && window.matchMedia('(hover: none)').matches);
+const observadorSelo = (ehToque && 'IntersectionObserver' in window)
+  ? new IntersectionObserver((entradas) => {
+      entradas.forEach(en => {
+        if(en.isIntersecting){
+          en.target.classList.add('in-view');
+          observadorSelo.unobserve(en.target);
+        }
+      });
+    }, { threshold: 0.6 })
+  : null;
+
 function createCardEl(p){
   const fotos = fotosDoProuto(p);
   const temVarias = fotos.length > 1;
@@ -928,6 +993,7 @@ function createCardEl(p){
     });
   }
 
+  if(observadorSelo) observadorSelo.observe(card);
   return card;
 }
 
