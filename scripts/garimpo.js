@@ -47,8 +47,15 @@ const KEYWORDS = [
 const KEYWORDS_PER_DAY = 10;   // quantas buscas por dia (gira pela lista acima)
 const RESULTS_PER_KEYWORD = 2; // itens NOVOS por busca, em cada loja
 const PAGE_SIZE = 20;          // quantos itens olhar por página antes de filtrar os já vistos
-const MAX_PAGES = 4;           // até onde descer nas páginas procurando itens novos
+const MAX_PAGES = 6;           // até onde descer nas páginas procurando itens novos
 const MAX_TOTAL = 20;          // teto de produtos enviados por dia
+
+// ---- regra de entrada: só passa item com histórico de vendas e nota ----
+const MIN_VENDAS = 50;  // vendas mínimas do item (Shopee e Mercado Livre)
+const MIN_NOTA = 4.5;   // nota mínima, de 0 a 5 (só a Shopee informa)
+
+const descartados = { semHistorico: 0 }; // quantos itens o corte barrou hoje
+const errosShopee = [];                  // erros da API, avisados no Telegram
 
 const VISTOS_PATH = path.join(__dirname, 'vistos.json');
 
@@ -118,6 +125,9 @@ async function consultarShopee(keyword, page){
         priceMin
         priceMax
         commissionRate
+        sales
+        ratingStar
+        shopName
       }
     }
   }`;
@@ -138,6 +148,7 @@ async function consultarShopee(keyword, page){
   const json = await res.json();
   if(json.errors){
     console.error(`[Shopee] erro na busca por "${keyword}" (página ${page}):`, JSON.stringify(json.errors));
+    errosShopee.push(JSON.stringify(json.errors).slice(0, 300));
     return [];
   }
   return json?.data?.productOfferV2?.nodes || [];
@@ -150,6 +161,9 @@ async function buscarShopee(keyword, excluir){
     for(const n of nodes){
       const key = `shopee:${n.itemId}`;
       if(excluir.has(key) || novos.length >= RESULTS_PER_KEYWORD) continue;
+      const vendas = Number(n.sales);
+      const nota = Number(n.ratingStar);
+      if(!(vendas >= MIN_VENDAS) || !(nota >= MIN_NOTA)){ descartados.semHistorico++; continue; }
       excluir.add(key);
       novos.push({
         key,
@@ -159,7 +173,8 @@ async function buscarShopee(keyword, excluir){
         title: n.productName,
         price: formatarPreco(n.priceMin),
         image: n.imageUrl,
-        link: n.offerLink || n.productLink
+        link: n.offerLink || n.productLink,
+        vendas, nota, loja: n.shopName || ''
       });
     }
     if(nodes.length < PAGE_SIZE) break; // acabaram as páginas dessa busca
@@ -186,6 +201,8 @@ async function buscarMercadoLivre(keyword, excluir){
     for(const r of results){
       const key = `ml:${r.id}`;
       if(excluir.has(key) || novos.length >= RESULTS_PER_KEYWORD) continue;
+      const vendas = Number(r.sold_quantity);
+      if(!(vendas >= MIN_VENDAS)){ descartados.semHistorico++; continue; }
       excluir.add(key);
       novos.push({
         key,
@@ -195,7 +212,8 @@ async function buscarMercadoLivre(keyword, excluir){
         title: r.title,
         price: formatarPreco(r.price),
         image: String(r.thumbnail || '').replace('http://', 'https://'),
-        link: r.permalink
+        link: r.permalink,
+        vendas, nota: null, loja: ''
       });
     }
     if(results.length < PAGE_SIZE) break;
@@ -239,7 +257,8 @@ async function enviarTelegramFoto(imageUrl, legenda){
 }
 
 function montarLegenda(p){
-  return `🦇 <b>${escapeHtml(p.title)}</b>\n💰 ${p.price} — ${escapeHtml(p.origem)}`;
+  const prova = `+${p.vendas} vendidos` + (p.nota ? ` · ★ ${p.nota.toFixed(1)}` : '') + (p.loja ? ` · ${escapeHtml(p.loja)}` : '');
+  return `🦇 <b>${escapeHtml(p.title)}</b>\n💰 ${p.price} — ${escapeHtml(p.origem)}\n🛒 ${prova}`;
 }
 
 function montarCodigo(p){
@@ -298,12 +317,17 @@ async function main(){
   achados = embaralhar(achados).slice(0, MAX_TOTAL);
   console.log(`Total de achados novos hoje: ${achados.length}`);
 
+  if(errosShopee.length){
+    await enviarTelegram(`⚠️ a API da Shopee devolveu erro (${errosShopee.length}x). Primeiro erro: <code>${escapeHtml(errosShopee[0])}</code>`);
+  }
+
   if(achados.length === 0){
-    await enviarTelegram("🦇 garimpo de hoje não encontrou nada novo. tenta ampliar a lista KEYWORDS no script.");
+    await enviarTelegram(`🦇 nada passou no corte de hoje (mín. ${MIN_VENDAS} vendas e nota ${MIN_NOTA}). Barrados por falta de histórico: ${descartados.semHistorico}. Ajuste KEYWORDS ou o corte no script.`);
+    salvarVistos(vistos); // garante que scripts/vistos.json existe
     return;
   }
 
-  await enviarTelegram(`🦇 <b>garimpo do dia</b> — ${achados.length} achados novos`);
+  await enviarTelegram(`🦇 <b>garimpo do dia</b> — ${achados.length} achados com histórico (barrados por falta dele: ${descartados.semHistorico})`);
   await esperar(600);
 
   for(const p of achados){
