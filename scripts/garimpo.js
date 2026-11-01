@@ -54,7 +54,23 @@ const MAX_TOTAL = 20;          // teto de produtos enviados por dia
 const MIN_VENDAS = 50;  // vendas mínimas do item (Shopee e Mercado Livre)
 const MIN_NOTA = 4.5;   // nota mínima, de 0 a 5 (só a Shopee informa)
 
+const DIAGNOSTICO = true; // manda um resumo do que o corte barrou (desligue com false quando estiver calibrado)
+
 const descartados = { semHistorico: 0 }; // quantos itens o corte barrou hoje
+const barrados = new Set();              // itens já barrados (evita contar o mesmo item duas vezes)
+const estat = { porVendas: 0, porNota: 0, semDado: 0, amostra: [] };
+
+function registrarBarrado(key, vendas, nota, titulo, loja, semDado){
+  barrados.add(key);
+  descartados.semHistorico++;
+  if(semDado) estat.semDado++;
+  else if(!(vendas >= MIN_VENDAS)) estat.porVendas++;
+  else estat.porNota++;
+  estat.amostra.push({
+    vendas: isFinite(vendas) && !semDado ? vendas : -1,
+    nota, loja: loja || '', titulo: String(titulo || '').slice(0, 55)
+  });
+}
 const errosShopee = [];                  // erros da API, avisados no Telegram
 
 const VISTOS_PATH = path.join(__dirname, 'vistos.json');
@@ -160,10 +176,13 @@ async function buscarShopee(keyword, excluir){
     const nodes = await consultarShopee(keyword, page);
     for(const n of nodes){
       const key = `shopee:${n.itemId}`;
-      if(excluir.has(key) || novos.length >= RESULTS_PER_KEYWORD) continue;
+      if(excluir.has(key) || barrados.has(key) || novos.length >= RESULTS_PER_KEYWORD) continue;
       const vendas = Number(n.sales);
       const nota = Number(n.ratingStar);
-      if(!(vendas >= MIN_VENDAS) || !(nota >= MIN_NOTA)){ descartados.semHistorico++; continue; }
+      if(!(vendas >= MIN_VENDAS) || !(nota >= MIN_NOTA)){
+        registrarBarrado(key, vendas, nota, n.productName, n.shopName, n.sales == null || n.ratingStar == null);
+        continue;
+      }
       excluir.add(key);
       novos.push({
         key,
@@ -200,9 +219,12 @@ async function buscarMercadoLivre(keyword, excluir){
     const results = json?.results || [];
     for(const r of results){
       const key = `ml:${r.id}`;
-      if(excluir.has(key) || novos.length >= RESULTS_PER_KEYWORD) continue;
+      if(excluir.has(key) || barrados.has(key) || novos.length >= RESULTS_PER_KEYWORD) continue;
       const vendas = Number(r.sold_quantity);
-      if(!(vendas >= MIN_VENDAS)){ descartados.semHistorico++; continue; }
+      if(!(vendas >= MIN_VENDAS)){
+        registrarBarrado(key, vendas, NaN, r.title, '', r.sold_quantity == null);
+        continue;
+      }
       excluir.add(key);
       novos.push({
         key,
@@ -280,6 +302,24 @@ function montarMensagemCompleta(p){
   return `${montarLegenda(p)}\n\n${montarCodigo(p)}`;
 }
 
+async function enviarDiagnostico(passaram){
+  if(!DIAGNOSTICO) return;
+  const topo = estat.amostra
+    .filter(a => a.vendas >= 0)
+    .sort((a, b) => b.vendas - a.vendas)
+    .slice(0, 5)
+    .map((a, i) => `${i + 1}. ${a.vendas} vendas${isFinite(a.nota) ? ' · ★ ' + a.nota : ''} — ${escapeHtml(a.titulo)}${a.loja ? ' (' + escapeHtml(a.loja) + ')' : ''}`)
+    .join('\n');
+  await enviarTelegram(
+    `📊 <b>diagnóstico do corte</b>\n` +
+    `passaram: ${passaram} | barrados: ${descartados.semHistorico}\n` +
+    `· poucas vendas (<${MIN_VENDAS}): ${estat.porVendas}\n` +
+    `· nota baixa (<${MIN_NOTA}, com vendas ok): ${estat.porNota}\n` +
+    `· sem dado de vendas ou nota: ${estat.semDado}\n\n` +
+    `maiores vendas entre os barrados:\n${topo || '(nenhum)'}`
+  );
+}
+
 // ============================================================
 // EXECUÇÃO
 // ============================================================
@@ -323,6 +363,7 @@ async function main(){
 
   if(achados.length === 0){
     await enviarTelegram(`🦇 nada passou no corte de hoje (mín. ${MIN_VENDAS} vendas e nota ${MIN_NOTA}). Barrados por falta de histórico: ${descartados.semHistorico}. Ajuste KEYWORDS ou o corte no script.`);
+    await enviarDiagnostico(0);
     salvarVistos(vistos); // garante que scripts/vistos.json existe
     return;
   }
@@ -355,6 +396,7 @@ async function main(){
     await esperar(600);
   }
 
+  await enviarDiagnostico(achados.length);
   salvarVistos(vistos);
 }
 
